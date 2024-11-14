@@ -1,0 +1,5 @@
+streamlit
+graphviz
+python-dotenv
+authlib
+rdflib
