@@ -20,3 +20,6 @@ streamlit run app.py  --server.address x.x.x.x --server.port xxxx --theme.font m
 
 ### 6，创建管理员
 python scripts/create_admin.py --email xxxxxx --password xxxxxx
+
+### 7，启动api服务
+uvicorn api.api_main:app
