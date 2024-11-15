@@ -3,3 +3,6 @@ graphviz
 python-dotenv
 authlib
 rdflib
+fastapi
+pyjwt
+uvicorn[standard]
