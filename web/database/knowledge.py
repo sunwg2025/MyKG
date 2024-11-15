@@ -30,8 +30,8 @@ class Knowledge(Base):
 		return session.query(Knowledge).filter(Knowledge.owner == st.session_state.current_username, Knowledge.name == name).first()
 
 	@staticmethod
-	def get_knowledge_by_owner_with_name(username, name):
-		return session.query(Knowledge).filter(Knowledge.owner == username, Knowledge.name == name).first()
+	def get_knowledge_by_owner_with_name(username, knowledge_name):
+		return session.query(Knowledge).filter(Knowledge.owner == username, Knowledge.name == knowledge_name).first()
 
 	@staticmethod
 	def get_knowledge_by_id(id):
