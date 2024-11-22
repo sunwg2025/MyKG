@@ -35,6 +35,38 @@ with st.form('tags'):
                 session.rollback()
                 st.error('工具提示词创建失败，错误原因：{}！'.format(e), icon=':material/error:')
 
+
+st.subheader('文本摘要生成', divider=True)
+with st.form('summary'):
+    system_prompt_summary = System_Prompt.get_system_prompt_by_name('Summary_Analyze')
+    if 'summary_analyze' not in st.session_state:
+        if system_prompt_summary:
+            st.session_state['summary_analyze'] = system_prompt_summary.content
+            st.session_state['summary_result'] = system_prompt_summary.result
+    summary_analyze = st.text_area('文本摘要分析', height=240, max_chars=4096, key='summary_analyze')
+    summary_result = st.text_area('摘要结果', height=120, max_chars=4096, key='summary_result')
+
+    summary_analyze_submit = st.form_submit_button('提交')
+    if summary_analyze_submit:
+        system_prompt = System_Prompt.get_system_prompt_by_name('Summary_Analyze')
+        if system_prompt is not None:
+            try:
+                System_Prompt.update_system_prompt_by_name('Summary_Analyze', summary_analyze, summary_result)
+                st.success('工具提示词更新成功！', icon=':material/done:')
+            except Exception as e:
+                session.rollback()
+                st.error('工具提示词更新失败，错误原因：{}！'.format(e), icon=':material/error:')
+        else:
+            try:
+                system_prompt = System_Prompt(name='Summary_Analyze', content=summary_analyze, result=summary_result)
+                session.add(system_prompt)
+                session.commit()
+                st.success('工具提示词创建成功！', icon=':material/done:')
+            except Exception as e:
+                session.rollback()
+                st.error('工具提示词创建失败，错误原因：{}！'.format(e), icon=':material/error:')
+
+
 st.subheader('实体识别', divider=True)
 with st.form('entities'):
     system_prompt_entities = System_Prompt.get_system_prompt_by_name('Entities_Analyze')

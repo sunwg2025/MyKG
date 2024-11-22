@@ -2,6 +2,7 @@ import streamlit as st
 from web.database.model import Model
 from web.database.experiment import Experiment
 from web.database.dataset import Dataset
+from web.database.dataset_split import Dataset_Split
 from web.database.prompt import Prompt
 from web.database.experiment_log import Experiment_Log
 from web.tools.model import extract_attribute_knowledge
@@ -46,7 +47,17 @@ else:
         if dataset_select is not None:
             dataset_id = dataset_select.split(':')[0]
             dataset = Dataset.get_dataset_by_id(dataset_id)
-            st.text_area('数据内容', height=360, max_chars=4096, value=dataset.content, disabled=True)
+
+            dataset_splits = []
+            for dataset_split in Dataset_Split.get_dataset_splits_by_dataset_id(dataset_id):
+                dataset_splits.append('{}: 数据分片【{}】 字符数【{}】'.format(dataset_split.id, dataset_split.name,
+                                                                    dataset_split.total_size))
+            dataset_split_select = st.selectbox('数据内容', options=dataset_splits)
+
+            if dataset_split_select is not None:
+                dataset_split_id = dataset_split_select.split(':')[0]
+                dataset_split = Dataset_Split.get_dataset_splits_by_id(dataset_split_id)
+                st.text_area('数据内容', height=360, max_chars=4096, value=dataset_split.content, disabled=True)
 
         models_data = []
         for model in models:
@@ -191,7 +202,7 @@ else:
                     model_id = model_select.split(':')[0]
                     model = Model.get_model_by_id(model_id)
 
-                    extract_result = extract_attribute_knowledge(dataset_content=dataset.content,
+                    extract_result = extract_attribute_knowledge(dataset_content=dataset_split.content,
                                                                  model_content=model.content,
                                                                  entity_content=entity_extract_text,
                                                                  character=prompt.character,
@@ -205,6 +216,7 @@ else:
                                                     experiment_id=experiment.id,
                                                     type='attribute_extract',
                                                     dataset_id=dataset_id,
+                                                    dataset_split_id=dataset_split.id,
                                                     model_id=model_id,
                                                     extract_prompt=extract_prompt,
                                                     extract_result=str(extract_result))

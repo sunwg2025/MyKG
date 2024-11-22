@@ -107,6 +107,12 @@ def analyze_content_tags(content, model):
     return call_system_prompt_base(content, model, sys_prompt.content, sys_prompt.result)
 
 
+def analyze_content_summary(content, model):
+    sys_prompt = System_Prompt.get_system_prompt_by_name('Summary_Analyze')
+    return call_system_prompt_base(content, model, sys_prompt.content, sys_prompt.result)
+
+
+
 def analyze_content_entities(content, model):
     sys_prompt = System_Prompt.get_system_prompt_by_name('Entities_Analyze')
     return call_system_prompt_base(content, model, sys_prompt.content, sys_prompt.result)
@@ -116,6 +122,7 @@ def analyze_knowledges_choose(knowledge_input, content, model):
     sys_prompt = System_Prompt.get_system_prompt_by_name('Knowledges_Choose')
     sys_prompt_content = sys_prompt.content.replace('{{ knowledge_input }}', knowledge_input)
     return call_system_prompt_base(content, model, sys_prompt_content, sys_prompt.result)
+
 
 def generate_knowledges_answer(knowledge_input, content, model):
     sys_prompt = System_Prompt.get_system_prompt_by_name('Knowledges_Answer')

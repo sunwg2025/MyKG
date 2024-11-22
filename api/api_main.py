@@ -91,7 +91,7 @@ class User_M(BaseModel):
 async def get_all_entities(knowledge_name: str,
                            current_user: User_M = Depends(get_current_user)):
     username = current_user.username
-    knowledge = Knowledge.get_knowledge_by_owner_with_name(username, knowledge_name)
+    knowledge = Knowledge.get_knowledge_by_owner_with_name_api(username, knowledge_name)
     if knowledge is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -107,7 +107,7 @@ async def get_all_attributes(knowledge_name: str,
                              entity: str,
                              current_user: User_M = Depends(get_current_user)):
     username = current_user.username
-    knowledge = Knowledge.get_knowledge_by_owner_with_name(username, knowledge_name)
+    knowledge = Knowledge.get_knowledge_by_owner_with_name_api(username, knowledge_name)
     if knowledge is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -129,7 +129,7 @@ async def get_all_relations(knowledge_name: str,
                             entity: str,
                             current_user: User_M = Depends(get_current_user)):
     username = current_user.username
-    knowledge = Knowledge.get_knowledge_by_owner_with_name(username, knowledge_name)
+    knowledge = Knowledge.get_knowledge_by_owner_with_name_api(username, knowledge_name)
     if knowledge is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

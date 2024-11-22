@@ -134,6 +134,7 @@ def get_all_relation_knowledge(graph):
         SELECT ?subject ?predicate ?object
         WHERE {
             ?predicate kg:类型 kg:关系 .
+            ?object kg:类型 kg:实体 .
             ?subject ?predicate ?object .
         }
     ''', initNs={'kg': ns})

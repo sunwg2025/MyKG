@@ -13,8 +13,9 @@ class Dataset(Base):
     owner = Column(String(32))
     channel = Column(String(32))
     source = Column(String(2048))
-    content = Column(Text)
     tags = Column(String(64))
+    total_size = Column(Integer)
+    split_count = Column(Integer)
     create_at = Column(DateTime, default=func.datetime('now', 'localtime'))
     update_at = Column(DateTime, default=func.datetime('now', 'localtime'))
 
@@ -51,7 +52,6 @@ class Dataset(Base):
     def update_dataset_columns(self, new):
         self.catalog = new.catalog
         self.name = new.name
-        self.content = new.content
         self.tags = new.tags
         self.update_at = datetime.now()
         session.commit()

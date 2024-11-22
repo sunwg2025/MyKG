@@ -10,6 +10,7 @@ class Experiment_Log(Base):
     experiment_id = Column(Integer)
     type = Column(String(16))
     dataset_id = Column(Integer)
+    dataset_split_id = Column(Integer)
     model_id = Column(Integer)
     extract_prompt = Column(Text)
     extract_result = Column(Text)

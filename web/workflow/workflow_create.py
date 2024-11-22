@@ -2,6 +2,7 @@ import streamlit as st
 from web.database.experiment import Experiment
 from web.database.model import Model
 from web.database.dataset import Dataset
+from web.database.dataset_split import Dataset_Split
 from web.database.prompt import Prompt
 from web.database.knowledge import Knowledge
 from web.database.workflow import Workflow
@@ -58,13 +59,16 @@ with st.container(border=True):
     datasets_select = st.multiselect('选择数据集', options=my_datasets)
 
     dataset_size = 0
+    dataset_split_cnt = 0
     dataset_ids = []
     for dataset_select in datasets_select:
         dataset_id = dataset_select.split(':')[0]
         dataset_ids.append(dataset_id)
         dataset = Dataset.get_dataset_by_id(dataset_id)
-        dataset_size += len(dataset.content)
+        dataset_split_cnt += dataset.split_count
+        dataset_size += dataset.total_size
     datasets_count_text = st.text('数据集个数：{}'.format(len(datasets_select)))
+    dataset_splits_count_text = st.text('数据分片个数：{}'.format(dataset_split_cnt))
     datasets_size_text = st.text('数据集总字符：{}'.format(dataset_size))
 
 st.subheader('Step 3：选择知识库', divider=True)
@@ -78,7 +82,7 @@ with st.container(border=True):
         knowledge_id = knowledge_select.split(':')[0]
         knowledge = Knowledge.get_knowledge_by_id(knowledge_id)
         graph = load_knowledge_from_xml(knowledge.rdf_xml)
-        entitys_count_text = st.text('实体个数：{}'.format(len(get_all_entity_knowledge(graph))))
+        entities_count_text = st.text('实体个数：{}'.format(len(get_all_entity_knowledge(graph))))
         attributes_count_text = st.text('属性个数：{}'.format(len(get_all_attribute_knowledge(graph))))
         relations_count_text = st.text('关系个数：{}'.format(len(get_all_relation_knowledge(graph))))
 
@@ -125,8 +129,6 @@ with st.container(border=True):
                                     dataset_ids=str(dataset_ids),
                                     knowledge_id=knowledge_id)
                 session.add(workflow)
-                session.commit()
-
                 workflow = Workflow.get_workflow_by_owner_name(workflow_name)
                 for dataset_id in dataset_ids:
                     dataset = Dataset.get_dataset_by_id(dataset_id)
@@ -135,23 +137,27 @@ with st.container(border=True):
                     attribute_model = Model.get_model_by_id(experiment.attribute_extract_model_id)
                     relation_model = Model.get_model_by_id(experiment.relation_extract_model_id)
 
-                    workflow_task = Workflow_Task(owner=st.session_state.current_username,
-                                                  workflow_id=workflow.id,
-                                                  experiment_id=experiment_id,
-                                                  dataset_id=dataset_id,
-                                                  knowledge_id=knowledge_id,
-                                                  dataset_content=dataset.content,
-                                                  character=prompt.character,
-                                                  entity_model_content=entity_model.content,
-                                                  entity_extract=prompt.entity_extract,
-                                                  entity_extract_parse=prompt.entity_extract_parse,
-                                                  attribute_model_content=attribute_model.content,
-                                                  attribute_extract=prompt.attribute_extract,
-                                                  attribute_extract_parse=prompt.attribute_extract_parse,
-                                                  relation_model_content=relation_model.content,
-                                                  relation_extract=prompt.relation_extract,
-                                                  relation_extract_parse=prompt.relation_extract_parse)
-                    session.add(workflow_task)
+                    for dataset_split in Dataset_Split.get_dataset_splits_by_dataset_id(dataset_id):
+
+                        workflow_task = Workflow_Task(owner=st.session_state.current_username,
+                                                      workflow_id=workflow.id,
+                                                      experiment_id=experiment_id,
+                                                      dataset_id=dataset_id,
+                                                      dataset_split_id=dataset_split.id,
+                                                      knowledge_id=knowledge_id,
+                                                      dataset_split_name=dataset_split.name,
+                                                      dataset_split_content=dataset_split.content,
+                                                      character=prompt.character,
+                                                      entity_model_content=entity_model.content,
+                                                      entity_extract=prompt.entity_extract,
+                                                      entity_extract_parse=prompt.entity_extract_parse,
+                                                      attribute_model_content=attribute_model.content,
+                                                      attribute_extract=prompt.attribute_extract,
+                                                      attribute_extract_parse=prompt.attribute_extract_parse,
+                                                      relation_model_content=relation_model.content,
+                                                      relation_extract=prompt.relation_extract,
+                                                      relation_extract_parse=prompt.relation_extract_parse)
+                        session.add(workflow_task)
                 session.commit()
                 st.success('工作流创建成功！', icon=':material/done:')
             except Exception as e:

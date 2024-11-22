@@ -5,7 +5,7 @@ from web.database import session
 from web.tools.model import analyze_content_tags
 from io import StringIO
 
-st.header('知识库创建')
+st.header('文本数据集创建')
 
 if 'file_contents_result' not in st.session_state:
     st.session_state.file_contents_result = []

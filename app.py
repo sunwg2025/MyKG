@@ -25,8 +25,9 @@ password_reset_page = st.Page('web/account/password_reset.py', title='密码重�
 email_reset_page = st.Page('web/account/email_reset.py', title='邮箱重置', icon=':material/email:')
 
 # 数据集管理
-input_dataset_page = st.Page('web/dataset/input_dataset.py', title='输入数据集', icon=':material/keyboard:')
-flatfile_dataset_page = st.Page('web/dataset/flatfile_dataset.py', title='文本数据集', icon=':material/insert_drive_file:')
+structured_create_page = st.Page('web/dataset/structured_create.py', title='结构化数据集', icon=':material/table_rows:')
+semi_structured_create_page = st.Page('web/dataset/semi_structured_create.py', title='半结构化数据集', icon=':material/code:')
+unstructured_create_page = st.Page('web/dataset/unstructured_create.py', title='非结构化数据集', icon=':material/audio_file:')
 dataset_modify_page = st.Page('web/dataset/dataset_modify.py', title='数据集变更', icon=':material/folder_copy:')
 
 # 提示词管理
@@ -72,8 +73,8 @@ if st.session_state.logged_in:
             {
                 '账号权限': [user_logout_page, password_reset_page, email_reset_page],
                 '提示词管理': [prompt_create_page, prompt_modify_page],
-                '模型管理': [model_create_page, model_modify_page],
-                '数据准备': [input_dataset_page, flatfile_dataset_page, dataset_modify_page],
+                '大模型管理': [model_create_page, model_modify_page],
+                '数据集管理': [structured_create_page, semi_structured_create_page, unstructured_create_page, dataset_modify_page],
                 '知识库管理': [knowledge_create_page, knowledge_modify_page, knowledge_manage_page, knowledge_delete_page],
                 '知识实验室': [experiment_create_page, experiment_execute_page, entity_extract_page, attribute_extract_page, relation_extract_page],
                 '工作流管理': [workflow_create_page, workflow_execute_page],
@@ -87,8 +88,8 @@ if st.session_state.logged_in:
             {
                 '账号权限': [user_logout_page, password_reset_page, email_reset_page],
                 '提示词管理': [prompt_create_page, prompt_modify_page],
-                '模型管理': [model_create_page, model_modify_page],
-                '数据准备': [input_dataset_page, flatfile_dataset_page, dataset_modify_page],
+                '大模型管理': [model_create_page, model_modify_page],
+                '数据集管理': [structured_create_page, semi_structured_create_page, unstructured_create_page, dataset_modify_page],
                 '知识库管理': [knowledge_create_page, knowledge_modify_page, knowledge_manage_page, knowledge_delete_page],
                 '知识实验室': [experiment_create_page, experiment_execute_page, entity_extract_page, attribute_extract_page, relation_extract_page],
                 '工作流管理': [workflow_create_page, workflow_execute_page],

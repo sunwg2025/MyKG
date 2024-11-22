@@ -72,6 +72,7 @@ with st.container(border=True):
         entity_node = attribute['实体']
         entity_attributes[entity_node].append(attribute)
     for relation in relations:
+        print('aaaaa', relation)
         entity_node1 = relation['实体1']
         entity_node2 = relation['实体2']
         entity_relations[entity_node1].append(relation)

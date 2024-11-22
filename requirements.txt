@@ -7,3 +7,9 @@ fastapi
 fastapi-cdn-host
 pyjwt
 uvicorn[standard]
+langchain-text-splitters
+PyPDF2
+funasr
+torch
+torchaudio
+modelscope

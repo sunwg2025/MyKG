@@ -1,6 +1,10 @@
 import argparse
+import os
+
 from dotenv import load_dotenv
 load_dotenv()
+import sys
+sys.path.append(os.environ['BASE_DIR'])
 from web.database.user import User
 from web.database import session
 

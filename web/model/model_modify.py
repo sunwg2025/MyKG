@@ -41,7 +41,7 @@ with st.form("submit"):
             error = False
             same_model = Model.get_model_by_owner_with_name(model_name)
             if same_model:
-                if same_model.id != model_id:
+                if str(same_model.id) != str(model_id):
                     st.error('用户下已有同名模型，请重新输入！', icon=':material/error:')
                     error = True
             if not error:

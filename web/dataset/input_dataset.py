@@ -7,7 +7,7 @@ st.header('输入数据集创建')
 st.session_state.current_page = 'input_dataset_page'
 
 with st.form('submit'):
-    dataset_content = st.text_area('数据内容', height=360, max_chars=4096, key='dataset_content')
+    dataset_content = st.text_area('数据内容', height=360, key='dataset_content')
     tags = st.text_input('数据标签', max_chars=64, help='数据内容的关键词，逗号分隔', key='tags')
 
     catalog_name = st.text_input('数据类目', key='catalog_name')
