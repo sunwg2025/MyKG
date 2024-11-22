@@ -23,3 +23,6 @@ python scripts/create_admin.py --email xxxxxx --password xxxxxx
 
 ### 7，启动api服务
 uvicorn api.api_main:app
+
+### 8， 安装ffmpeg
+参考相关安装文档
