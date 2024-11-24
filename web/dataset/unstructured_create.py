@@ -47,13 +47,13 @@ elif data_type_select == 'TXT文件':
             uploaded_file_name = uploaded_file.name.rsplit('.', 1)[0]
             if uploaded_file_name not in st.session_state.dataset_contents_cache:
                 uploaded_file_content = StringIO(uploaded_file.getvalue().decode('utf-8')).getvalue()
-                tmp_uploaded_file_parse = {'name': uploaded_file_name,
-                                           'content': uploaded_file_content,
-                                           'size': len(uploaded_file_content)}
-                dataset_contents_detail.append(tmp_uploaded_file_parse)
                 st.session_state.dataset_contents_cache[uploaded_file_name] = uploaded_file_content
             else:
                 uploaded_file_content = st.session_state.dataset_contents_cache[uploaded_file_name]
+            tmp_uploaded_file_parse = {'name': uploaded_file_name,
+                                       'content': uploaded_file_content,
+                                       'size': len(uploaded_file_content)}
+            dataset_contents_detail.append(tmp_uploaded_file_parse)
 
             input_files_total_size += len(uploaded_file_content)
             input_files_max_size = len(uploaded_file_content) if len(uploaded_file_content) > input_files_max_size \
@@ -85,13 +85,13 @@ elif data_type_select == 'PDF文件':
             uploaded_file_name = uploaded_file.name.rsplit('.', 1)[0]
             if uploaded_file_name not in st.session_state.dataset_contents_cache:
                 uploaded_file_content = parse_unstructured_pdf_data(uploaded_file.getvalue())
-                tmp_uploaded_file_parse = {'name': uploaded_file_name,
-                                           'content': uploaded_file_content,
-                                           'size': len(uploaded_file_content)}
-                dataset_contents_detail.append(tmp_uploaded_file_parse)
                 st.session_state.dataset_contents_cache[uploaded_file_name] = uploaded_file_content
             else:
                 uploaded_file_content = st.session_state.dataset_contents_cache[uploaded_file_name]
+            tmp_uploaded_file_parse = {'name': uploaded_file_name,
+                                       'content': uploaded_file_content,
+                                       'size': len(uploaded_file_content)}
+            dataset_contents_detail.append(tmp_uploaded_file_parse)
 
             input_files_total_size += len(uploaded_file_content)
             input_files_max_size = len(uploaded_file_content) if len(uploaded_file_content) > input_files_max_size \
@@ -123,13 +123,13 @@ elif data_type_select == '音频文件':
             uploaded_file_name = uploaded_file.name.rsplit('.', 1)[0]
             if uploaded_file_name not in st.session_state.dataset_contents_cache:
                 uploaded_file_content = parse_unstructured_audio_data(uploaded_file.getvalue(), uploaded_file.name)
-                tmp_uploaded_file_parse = {'name': uploaded_file_name,
-                                           'content': uploaded_file_content,
-                                           'size': len(uploaded_file_content)}
-                dataset_contents_detail.append(tmp_uploaded_file_parse)
                 st.session_state.dataset_contents_cache[uploaded_file_name] = uploaded_file_content
             else:
                 uploaded_file_content = st.session_state.dataset_contents_cache[uploaded_file_name]
+            tmp_uploaded_file_parse = {'name': uploaded_file_name,
+                                       'content': uploaded_file_content,
+                                       'size': len(uploaded_file_content)}
+            dataset_contents_detail.append(tmp_uploaded_file_parse)
 
             input_files_total_size += len(uploaded_file_content)
             input_files_max_size = len(uploaded_file_content) if len(uploaded_file_content) > input_files_max_size \
@@ -161,13 +161,13 @@ elif data_type_select == '视频文件':
             uploaded_file_name = uploaded_file.name.rsplit('.', 1)[0]
             if uploaded_file_name not in st.session_state.dataset_contents_cache:
                 uploaded_file_content = parse_unstructured_video_data(uploaded_file.getvalue(), uploaded_file.name)
-                tmp_uploaded_file_parse = {'name': uploaded_file_name,
-                                           'content': uploaded_file_content,
-                                           'size': len(uploaded_file_content)}
-                dataset_contents_detail.append(tmp_uploaded_file_parse)
                 st.session_state.dataset_contents_cache[uploaded_file_name] = uploaded_file_content
             else:
                 uploaded_file_content = st.session_state.dataset_contents_cache[uploaded_file_name]
+            tmp_uploaded_file_parse = {'name': uploaded_file_name,
+                                       'content': uploaded_file_content,
+                                       'size': len(uploaded_file_content)}
+            dataset_contents_detail.append(tmp_uploaded_file_parse)
 
             input_files_total_size += len(uploaded_file_content)
             input_files_max_size = len(uploaded_file_content) if len(uploaded_file_content) > input_files_max_size \
