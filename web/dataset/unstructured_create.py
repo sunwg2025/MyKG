@@ -42,8 +42,6 @@ elif data_type_select == 'TXT文件':
 
         input_files_total_size = 0
         input_files_max_size = 0
-        my_uploaded_files = []
-        ind = 0
         for uploaded_file in uploaded_files:
             uploaded_file_name = uploaded_file.name.rsplit('.', 1)[0]
             uploaded_file_parsed = [item['name'] for item in st.session_state.dataset_contents_detail]
@@ -57,10 +55,14 @@ elif data_type_select == 'TXT文件':
                 file_ind = uploaded_file_parsed.index(uploaded_file_name)
                 uploaded_file_content = st.session_state.dataset_contents_detail[file_ind]['content']
 
-            my_uploaded_files.append("{}: 文件名【{}】 字符数【{}】".format(ind, uploaded_file.name, len(uploaded_file_content)))
             input_files_total_size += len(uploaded_file_content)
             input_files_max_size = len(uploaded_file_content) if len(uploaded_file_content) > input_files_max_size \
                 else input_files_max_size
+
+        ind = 0
+        my_uploaded_files = []
+        for dataset_content_detail in st.session_state.dataset_contents_detail:
+            my_uploaded_files.append("{}: 文件名【{}】 字符数【{}】".format(ind, dataset_content_detail['name'], len(dataset_content_detail['content'])))
             ind += 1
 
         uploaded_file_select = st.selectbox('数据预览', options=my_uploaded_files)
@@ -79,8 +81,6 @@ elif data_type_select == 'PDF文件':
 
         input_files_total_size = 0
         input_files_max_size = 0
-        my_uploaded_files = []
-        ind = 0
         for uploaded_file in uploaded_files:
             uploaded_file_name = uploaded_file.name.rsplit('.', 1)[0]
             uploaded_file_parsed = [item['name'] for item in st.session_state.dataset_contents_detail]
@@ -94,11 +94,14 @@ elif data_type_select == 'PDF文件':
                 file_ind = uploaded_file_parsed.index(uploaded_file_name)
                 uploaded_file_content = st.session_state.dataset_contents_detail[file_ind]['content']
 
-            my_uploaded_files.append("{}: 文件名【{}】 字符数【{}】".format(ind, uploaded_file.name, len(uploaded_file_content)))
             input_files_total_size += len(uploaded_file_content)
             input_files_max_size = len(uploaded_file_content) if len(uploaded_file_content) > input_files_max_size \
                 else input_files_max_size
 
+        ind = 0
+        my_uploaded_files = []
+        for dataset_content_detail in st.session_state.dataset_contents_detail:
+            my_uploaded_files.append("{}: 文件名【{}】 字符数【{}】".format(ind, dataset_content_detail['name'], len(dataset_content_detail['content'])))
             ind += 1
 
         uploaded_file_select = st.selectbox('数据预览', options=my_uploaded_files)
@@ -117,8 +120,6 @@ elif data_type_select == '音频文件':
 
         input_files_total_size = 0
         input_files_max_size = 0
-        my_uploaded_files = []
-        ind = 0
         for uploaded_file in uploaded_files:
             uploaded_file_name = uploaded_file.name.rsplit('.', 1)[0]
             uploaded_file_parsed = [item['name'] for item in st.session_state.dataset_contents_detail]
@@ -132,10 +133,14 @@ elif data_type_select == '音频文件':
                 file_ind = uploaded_file_parsed.index(uploaded_file_name)
                 uploaded_file_content = st.session_state.dataset_contents_detail[file_ind]['content']
 
-            my_uploaded_files.append("{}: 文件名【{}】 字符数【{}】".format(ind, uploaded_file.name, len(uploaded_file_content)))
             input_files_total_size += len(uploaded_file_content)
             input_files_max_size = len(uploaded_file_content) if len(uploaded_file_content) > input_files_max_size \
                 else input_files_max_size
+
+        ind = 0
+        my_uploaded_files = []
+        for dataset_content_detail in st.session_state.dataset_contents_detail:
+            my_uploaded_files.append("{}: 文件名【{}】 字符数【{}】".format(ind, dataset_content_detail['name'], len(dataset_content_detail['content'])))
             ind += 1
 
         uploaded_file_select = st.selectbox('数据预览', options=my_uploaded_files)
@@ -154,8 +159,6 @@ elif data_type_select == '视频文件':
 
         input_files_total_size = 0
         input_files_max_size = 0
-        my_uploaded_files = []
-        ind = 0
         for uploaded_file in uploaded_files:
             uploaded_file_name = uploaded_file.name.rsplit('.', 1)[0]
             uploaded_file_parsed = [item['name'] for item in st.session_state.dataset_contents_detail]
@@ -169,12 +172,14 @@ elif data_type_select == '视频文件':
                 file_ind = uploaded_file_parsed.index(uploaded_file_name)
                 uploaded_file_content = st.session_state.dataset_contents_detail[file_ind]['content']
 
-            my_uploaded_files.append("{}: 文件名【{}】 字符数【{}】".format(ind, uploaded_file.name, len(uploaded_file_content)))
             input_files_total_size += len(uploaded_file_content)
             input_files_max_size = len(uploaded_file_content) if len(uploaded_file_content) > input_files_max_size \
                 else input_files_max_size
 
-
+        ind = 0
+        my_uploaded_files = []
+        for dataset_content_detail in st.session_state.dataset_contents_detail:
+            my_uploaded_files.append("{}: 文件名【{}】 字符数【{}】".format(ind, dataset_content_detail['name'], len(dataset_content_detail['content'])))
             ind += 1
 
         uploaded_file_select = st.selectbox('数据预览', options=my_uploaded_files)
