@@ -54,9 +54,9 @@ elif data_type_select == 'TXT文件':
                                            'size': len(uploaded_file_content)}
                 st.session_state.dataset_contents_detail.append(tmp_uploaded_file_parse)
             else:
-                file_ind = st.session_state.dataset_contents_detail.index(uploaded_file_name)
+                file_ind = uploaded_file_parsed.index(uploaded_file_name)
                 uploaded_file_content = st.session_state.dataset_contents_detail[file_ind]['content']
-                
+
             my_uploaded_files.append("{}: 文件名【{}】 字符数【{}】".format(ind, uploaded_file.name, len(uploaded_file_content)))
             input_files_total_size += len(uploaded_file_content)
             input_files_max_size = len(uploaded_file_content) if len(uploaded_file_content) > input_files_max_size \
@@ -91,7 +91,7 @@ elif data_type_select == 'PDF文件':
                                            'size': len(uploaded_file_content)}
                 st.session_state.dataset_contents_detail.append(tmp_uploaded_file_parse)
             else:
-                file_ind = st.session_state.dataset_contents_detail.index(uploaded_file_name)
+                file_ind = uploaded_file_parsed.index(uploaded_file_name)
                 uploaded_file_content = st.session_state.dataset_contents_detail[file_ind]['content']
 
             my_uploaded_files.append("{}: 文件名【{}】 字符数【{}】".format(ind, uploaded_file.name, len(uploaded_file_content)))
@@ -129,7 +129,7 @@ elif data_type_select == '音频文件':
                                            'size': len(uploaded_file_content)}
                 st.session_state.dataset_contents_detail.append(tmp_uploaded_file_parse)
             else:
-                file_ind = st.session_state.dataset_contents_detail.index(uploaded_file_name)
+                file_ind = uploaded_file_parsed.index(uploaded_file_name)
                 uploaded_file_content = st.session_state.dataset_contents_detail[file_ind]['content']
 
             my_uploaded_files.append("{}: 文件名【{}】 字符数【{}】".format(ind, uploaded_file.name, len(uploaded_file_content)))
@@ -166,7 +166,7 @@ elif data_type_select == '视频文件':
                                            'size': len(uploaded_file_content)}
                 st.session_state.dataset_contents_detail.append(tmp_uploaded_file_parse)
             else:
-                file_ind = st.session_state.dataset_contents_detail.index(uploaded_file_name)
+                file_ind = uploaded_file_parsed.index(uploaded_file_name)
                 uploaded_file_content = st.session_state.dataset_contents_detail[file_ind]['content']
 
             my_uploaded_files.append("{}: 文件名【{}】 字符数【{}】".format(ind, uploaded_file.name, len(uploaded_file_content)))
