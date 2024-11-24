@@ -13,27 +13,28 @@ st.header('非结构化数据集创建')
 
 data_type_select = st.selectbox('选择数据来源', options=['数据录入', 'TXT文件', 'PDF文件', '音频文件', '视频文件'])
 
-if 'dataset_contents_detail' not in st.session_state:
-    st.session_state.dataset_contents_detail = []
+if 'dataset_contents_cache' not in st.session_state:
+    st.session_state.dataset_contents_cache = {}
 
 current_page = 'unstructured_create_page'
 if st.session_state.current_page != current_page:
-    st.session_state.dataset_contents_detail = []
+    st.session_state.dataset_contents_cache = {}
 st.session_state.current_page = 'unstructured_create_page'
 
+dataset_contents_detail = []
 channel = ''
 
 if data_type_select == '数据录入':
     st.subheader('Step 1：录入数据', divider=True)
     with st.container(border=True):
-        st.session_state.dataset_contents_detail = []
         input_dataset_content = st.text_area('数据内容', height=480, key='input_dataset_content')
         input_files_total_size = len(input_dataset_content)
         st.text('总字符数：{}'.format(input_files_total_size))
-        tmp_uploaded_file_parse = {'name': 'KeyBoard',
-                                   'content': input_dataset_content,
-                                   'size': len(input_dataset_content)}
-        st.session_state.dataset_contents_detail.append(tmp_uploaded_file_parse)
+        if input_dataset_content.strip():
+            tmp_uploaded_file_parse = {'name': 'KeyBoard',
+                                       'content': input_dataset_content,
+                                       'size': len(input_dataset_content)}
+            dataset_contents_detail.append(tmp_uploaded_file_parse)
         channel = 'unstructured_keyboard'
 elif data_type_select == 'TXT文件':
     st.subheader('Step 1：选择文件', divider=True)
@@ -44,16 +45,15 @@ elif data_type_select == 'TXT文件':
         input_files_max_size = 0
         for uploaded_file in uploaded_files:
             uploaded_file_name = uploaded_file.name.rsplit('.', 1)[0]
-            uploaded_file_parsed = [item['name'] for item in st.session_state.dataset_contents_detail]
-            if uploaded_file_name not in uploaded_file_parsed:
+            if uploaded_file_name not in st.session_state.dataset_contents_cache:
                 uploaded_file_content = StringIO(uploaded_file.getvalue().decode('utf-8')).getvalue()
                 tmp_uploaded_file_parse = {'name': uploaded_file_name,
                                            'content': uploaded_file_content,
                                            'size': len(uploaded_file_content)}
-                st.session_state.dataset_contents_detail.append(tmp_uploaded_file_parse)
+                dataset_contents_detail.append(tmp_uploaded_file_parse)
+                st.session_state.dataset_contents_cache[uploaded_file_name] = uploaded_file_content
             else:
-                file_ind = uploaded_file_parsed.index(uploaded_file_name)
-                uploaded_file_content = st.session_state.dataset_contents_detail[file_ind]['content']
+                uploaded_file_content = st.session_state.dataset_contents_cache[uploaded_file_name]
 
             input_files_total_size += len(uploaded_file_content)
             input_files_max_size = len(uploaded_file_content) if len(uploaded_file_content) > input_files_max_size \
@@ -61,14 +61,14 @@ elif data_type_select == 'TXT文件':
 
         ind = 0
         my_uploaded_files = []
-        for dataset_content_detail in st.session_state.dataset_contents_detail:
+        for dataset_content_detail in dataset_contents_detail:
             my_uploaded_files.append("{}: 文件名【{}】 字符数【{}】".format(ind, dataset_content_detail['name'], len(dataset_content_detail['content'])))
             ind += 1
 
         uploaded_file_select = st.selectbox('数据预览', options=my_uploaded_files)
         if uploaded_file_select is not None:
             ind_select = uploaded_file_select.split(':')[0]
-            dataset_content_select = st.session_state.dataset_contents_detail[int(ind_select)]
+            dataset_content_select = dataset_contents_detail[int(ind_select)]
             st.text_area('数据内容', value=dataset_content_select['content'], height=360, label_visibility='collapsed')
 
         st.text('汇总：字符数【{}】'.format(input_files_total_size))
@@ -83,16 +83,15 @@ elif data_type_select == 'PDF文件':
         input_files_max_size = 0
         for uploaded_file in uploaded_files:
             uploaded_file_name = uploaded_file.name.rsplit('.', 1)[0]
-            uploaded_file_parsed = [item['name'] for item in st.session_state.dataset_contents_detail]
-            if uploaded_file_name not in uploaded_file_parsed:
+            if uploaded_file_name not in st.session_state.dataset_contents_cache:
                 uploaded_file_content = parse_unstructured_pdf_data(uploaded_file.getvalue())
                 tmp_uploaded_file_parse = {'name': uploaded_file_name,
                                            'content': uploaded_file_content,
                                            'size': len(uploaded_file_content)}
-                st.session_state.dataset_contents_detail.append(tmp_uploaded_file_parse)
+                dataset_contents_detail.append(tmp_uploaded_file_parse)
+                st.session_state.dataset_contents_cache[uploaded_file_name] = uploaded_file_content
             else:
-                file_ind = uploaded_file_parsed.index(uploaded_file_name)
-                uploaded_file_content = st.session_state.dataset_contents_detail[file_ind]['content']
+                uploaded_file_content = st.session_state.dataset_contents_cache[uploaded_file_name]
 
             input_files_total_size += len(uploaded_file_content)
             input_files_max_size = len(uploaded_file_content) if len(uploaded_file_content) > input_files_max_size \
@@ -100,14 +99,14 @@ elif data_type_select == 'PDF文件':
 
         ind = 0
         my_uploaded_files = []
-        for dataset_content_detail in st.session_state.dataset_contents_detail:
+        for dataset_content_detail in dataset_contents_detail:
             my_uploaded_files.append("{}: 文件名【{}】 字符数【{}】".format(ind, dataset_content_detail['name'], len(dataset_content_detail['content'])))
             ind += 1
 
         uploaded_file_select = st.selectbox('数据预览', options=my_uploaded_files)
         if uploaded_file_select is not None:
             ind_select = uploaded_file_select.split(':')[0]
-            dataset_content_select = st.session_state.dataset_contents_detail[int(ind_select)]
+            dataset_content_select = dataset_contents_detail[int(ind_select)]
             st.text_area('数据内容', value=dataset_content_select['content'], height=360, label_visibility='collapsed')
 
         st.text('汇总：字符数【{}】'.format(input_files_total_size))
@@ -122,16 +121,15 @@ elif data_type_select == '音频文件':
         input_files_max_size = 0
         for uploaded_file in uploaded_files:
             uploaded_file_name = uploaded_file.name.rsplit('.', 1)[0]
-            uploaded_file_parsed = [item['name'] for item in st.session_state.dataset_contents_detail]
-            if uploaded_file_name not in uploaded_file_parsed:
+            if uploaded_file_name not in st.session_state.dataset_contents_cache:
                 uploaded_file_content = parse_unstructured_audio_data(uploaded_file.getvalue(), uploaded_file.name)
                 tmp_uploaded_file_parse = {'name': uploaded_file_name,
                                            'content': uploaded_file_content,
                                            'size': len(uploaded_file_content)}
-                st.session_state.dataset_contents_detail.append(tmp_uploaded_file_parse)
+                dataset_contents_detail.append(tmp_uploaded_file_parse)
+                st.session_state.dataset_contents_cache[uploaded_file_name] = uploaded_file_content
             else:
-                file_ind = uploaded_file_parsed.index(uploaded_file_name)
-                uploaded_file_content = st.session_state.dataset_contents_detail[file_ind]['content']
+                uploaded_file_content = st.session_state.dataset_contents_cache[uploaded_file_name]
 
             input_files_total_size += len(uploaded_file_content)
             input_files_max_size = len(uploaded_file_content) if len(uploaded_file_content) > input_files_max_size \
@@ -139,14 +137,14 @@ elif data_type_select == '音频文件':
 
         ind = 0
         my_uploaded_files = []
-        for dataset_content_detail in st.session_state.dataset_contents_detail:
+        for dataset_content_detail in dataset_contents_detail:
             my_uploaded_files.append("{}: 文件名【{}】 字符数【{}】".format(ind, dataset_content_detail['name'], len(dataset_content_detail['content'])))
             ind += 1
 
         uploaded_file_select = st.selectbox('数据预览', options=my_uploaded_files)
         if uploaded_file_select is not None:
             ind_select = uploaded_file_select.split(':')[0]
-            dataset_content_select = st.session_state.dataset_contents_detail[int(ind_select)]
+            dataset_content_select = dataset_contents_detail[int(ind_select)]
             st.text_area('数据内容', value=dataset_content_select['content'], height=360, label_visibility='collapsed')
 
         st.text('汇总：字符数【{}】'.format(input_files_total_size))
@@ -161,16 +159,15 @@ elif data_type_select == '视频文件':
         input_files_max_size = 0
         for uploaded_file in uploaded_files:
             uploaded_file_name = uploaded_file.name.rsplit('.', 1)[0]
-            uploaded_file_parsed = [item['name'] for item in st.session_state.dataset_contents_detail]
-            if uploaded_file_name not in uploaded_file_parsed:
+            if uploaded_file_name not in st.session_state.dataset_contents_cache:
                 uploaded_file_content = parse_unstructured_video_data(uploaded_file.getvalue(), uploaded_file.name)
                 tmp_uploaded_file_parse = {'name': uploaded_file_name,
                                            'content': uploaded_file_content,
                                            'size': len(uploaded_file_content)}
-                st.session_state.dataset_contents_detail.append(tmp_uploaded_file_parse)
+                dataset_contents_detail.append(tmp_uploaded_file_parse)
+                st.session_state.dataset_contents_cache[uploaded_file_name] = uploaded_file_content
             else:
-                file_ind = uploaded_file_parsed.index(uploaded_file_name)
-                uploaded_file_content = st.session_state.dataset_contents_detail[file_ind]['content']
+                uploaded_file_content = st.session_state.dataset_contents_cache[uploaded_file_name]
 
             input_files_total_size += len(uploaded_file_content)
             input_files_max_size = len(uploaded_file_content) if len(uploaded_file_content) > input_files_max_size \
@@ -178,14 +175,14 @@ elif data_type_select == '视频文件':
 
         ind = 0
         my_uploaded_files = []
-        for dataset_content_detail in st.session_state.dataset_contents_detail:
+        for dataset_content_detail in dataset_contents_detail:
             my_uploaded_files.append("{}: 文件名【{}】 字符数【{}】".format(ind, dataset_content_detail['name'], len(dataset_content_detail['content'])))
             ind += 1
 
         uploaded_file_select = st.selectbox('数据预览', options=my_uploaded_files)
         if uploaded_file_select is not None:
             ind_select = uploaded_file_select.split(':')[0]
-            dataset_content_select = st.session_state.dataset_contents_detail[int(ind_select)]
+            dataset_content_select = dataset_contents_detail[int(ind_select)]
             st.text_area('数据内容', value=dataset_content_select['content'], height=360, label_visibility='collapsed')
 
         st.text('汇总：字符数【{}】'.format(input_files_total_size))
@@ -239,7 +236,7 @@ with st.container(border=True):
                     st.error('用户下同名数据集已存在，请重新输入！', icon=':material/error:')
                     error = True
             else:
-                for dataset_content_detail in st.session_state.dataset_contents_detail:
+                for dataset_content_detail in dataset_contents_detail:
                     tmp_dataset_name = dataset_prefix + '.' + dataset_content_detail['name']
                     if Dataset.get_dataset_by_owner_with_name(tmp_dataset_name) is not None:
                         st.error('用户下同名数据集【{}】已存在，请重新输入！'.format(tmp_dataset_name), icon=':material/error:')
@@ -251,7 +248,7 @@ with st.container(border=True):
                 error = True
         if not error:
             all_dataset_contents = []
-            for dataset_content_detail in st.session_state.dataset_contents_detail:
+            for dataset_content_detail in dataset_contents_detail:
                 all_dataset_contents.append(dataset_content_detail['content'])
 
             if is_files_combine:
@@ -265,17 +262,17 @@ with st.container(border=True):
                     if is_files_combine:
                         tmp_dataset_name = dataset_name
                     else:
-                        tmp_dataset_name = dataset_prefix + '.' + st.session_state.dataset_contents_detail[ind]['name']
+                        tmp_dataset_name = dataset_prefix + '.' + dataset_contents_detail[ind]['name']
 
                     dataset_total_chr_cnt = 0
                     for dataset_split in dataset_splits:
                         dataset_total_chr_cnt += len(dataset_split)
 
-                    if len(all_dataset_contents) == 1 and len(st.session_state.dataset_contents_detail) > 1:
-                        file_names = [item['name'] for item in st.session_state.dataset_contents_detail]
+                    if len(all_dataset_contents) == 1 and len(dataset_contents_detail) > 1:
+                        file_names = [item['name'] for item in dataset_contents_detail]
                         source = ','.join(file_names)
                     else:
-                        source = st.session_state.dataset_contents_detail[ind]['name']
+                        source = dataset_contents_detail[ind]['name']
 
                     dataset = Dataset(catalog=dataset_catalog,
                                       name=tmp_dataset_name,
