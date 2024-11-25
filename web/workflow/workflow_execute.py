@@ -10,7 +10,7 @@ from datetime import datetime
 from web.database import session
 
 
-st.header('工作流执行')
+st.header('工作流执行-前台')
 st.session_state.current_page = 'workflow_execute_page'
 
 
@@ -149,6 +149,7 @@ with st.container(border=True):
                     workflow_task.relation_extract_result = str(relation_extract_result)
                     workflow_task.start_at = task_start_at
                     workflow_task.finish_at = datetime.now()
+                    workflow_task.update_at = datetime.now()
                     session.commit()
                 except Exception as e:
                     session.rollback()
@@ -156,36 +157,3 @@ with st.container(border=True):
                 my_bar.progress(my_bar_progress * index, text='{}% - 数据分片{} : {} 执行完成...'.format(round(index*my_bar_progress*100, 2), dataset_split_name, '知识库更新'))
                 index += 1
                 st.text('{}: 数据分片[{}] - {} 执行完成...'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), dataset_split_name, '知识库更新'))
-
-
-st.subheader('Step 3：查看执行结果', divider=True)
-with st.container(border=True):
-    my_workflow_tasks = []
-    if workflow_select is not None:
-        workflow_id = workflow_select.split(':')[0]
-        for workflow_task in Workflow_Task.get_workflow_tasks_by_workflow_id(workflow_id):
-            dataset = Dataset.get_dataset_by_id(workflow_task.dataset_id)
-            my_workflow_tasks.append('{}: 【{}】'.format(workflow_task.id, workflow_task.dataset_split_name))
-    workflow_task_select = st.selectbox('选择工作流任务', options=my_workflow_tasks, key='workflow_task_select')
-
-    if workflow_task_select is not None:
-        workflow_task_id = workflow_task_select.split(':')[0]
-        workflow_task = Workflow_Task.get_workflow_task_by_id(workflow_task_id)
-
-        st.text('实体抽取结果：')
-        entity_extract_result_code = []
-        if workflow_task.entity_extract_result is not None:
-            entity_extract_result_code = workflow_task.entity_extract_result
-        st.code(entity_extract_result_code, wrap_lines=True, language="json")
-
-        st.text('属性抽取结果：')
-        attribute_extract_result_code = []
-        if workflow_task.attribute_extract_result is not None:
-            attribute_extract_result_code = workflow_task.attribute_extract_result
-        st.code(attribute_extract_result_code, wrap_lines=True, language="json")
-
-        st.text('关系抽取结果：')
-        relation_extract_result_code = []
-        if workflow_task.relation_extract_result is not None:
-            relation_extract_result_code = workflow_task.relation_extract_result
-        st.code(relation_extract_result_code, wrap_lines=True, language="json")

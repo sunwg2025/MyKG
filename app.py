@@ -6,6 +6,7 @@ load_dotenv()
 st.set_page_config(page_title='知识图谱系统V1.0', page_icon=':material/cognition:')
 st.sidebar.title('知识图谱系统V1.0')
 
+
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 if 'logged_out' not in st.session_state:
@@ -56,7 +57,9 @@ question_and_answer_page = st.Page('web/knowledge_application/question_and_answe
 
 # 工作流
 workflow_create_page = st.Page('web/workflow/workflow_create.py', title='工作流创建', icon=':material/moving:')
-workflow_execute_page = st.Page('web/workflow/workflow_execute.py', title='工作流执行', icon=':material/play_circle:')
+workflow_execute_page = st.Page('web/workflow/workflow_execute.py', title='工作流执行-前台', icon=':material/play_circle:')
+workflow_execute_backend_page = st.Page('web/workflow/workflow_execute_backend.py', title='工作流执行-后台', icon=':material/play_circle:')
+workflow_result_query_page = st.Page('web/workflow/workflow_result_query.py', title='工作流结果查询', icon=':material/play_circle:')
 
 # 系统管理
 quick_guide_page = st.Page('web/system/quick_guide.py', title='快速指南', icon=':material/description:')
@@ -77,7 +80,7 @@ if st.session_state.logged_in:
                 '数据集管理': [structured_create_page, semi_structured_create_page, unstructured_create_page, dataset_modify_page],
                 '知识库管理': [knowledge_create_page, knowledge_modify_page, knowledge_manage_page, knowledge_delete_page],
                 '知识实验室': [experiment_create_page, experiment_execute_page, entity_extract_page, attribute_extract_page, relation_extract_page],
-                '工作流管理': [workflow_create_page, workflow_execute_page],
+                '工作流管理': [workflow_create_page, workflow_execute_page, workflow_execute_backend_page, workflow_result_query_page],
                 '知识库应用': [question_and_answer_page],
                 '系统管理': [admin_prompt_create_page, model_template_create_page, model_template_modify_page, system_prompt_modify_page, issue_modify_page],
                 '系统说明': [quick_guide_page, issue_create_page],
@@ -92,7 +95,7 @@ if st.session_state.logged_in:
                 '数据集管理': [structured_create_page, semi_structured_create_page, unstructured_create_page, dataset_modify_page],
                 '知识库管理': [knowledge_create_page, knowledge_modify_page, knowledge_manage_page, knowledge_delete_page],
                 '知识实验室': [experiment_create_page, experiment_execute_page, entity_extract_page, attribute_extract_page, relation_extract_page],
-                '工作流管理': [workflow_create_page, workflow_execute_page],
+                '工作流管理': [workflow_create_page, workflow_execute_page, workflow_execute_backend_page, workflow_result_query_page],
                 '知识库应用': [question_and_answer_page],
                 '系统说明': [quick_guide_page, issue_create_page],
             }
