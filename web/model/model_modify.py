@@ -1,6 +1,5 @@
 import streamlit as st
 from web.database.model import Model
-from web.database import session
 from web.tools.model import check_model_config
 
 st.header('模型变更')
@@ -35,7 +34,6 @@ with st.form("submit"):
                 Model.delete_model_by_id(model_id)
                 st.success('模型配置删除成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('模型配置删除失败，错误原因：{}！'.format(e), icon=':material/error:')
         else:
             error = False
@@ -58,6 +56,5 @@ with st.form("submit"):
                     model.update_model_columns(new)
                     st.success('模型更新成功！', icon=':material/done:')
                 except Exception as e:
-                    session.rollback()
                     st.error('模型更新失败，错误原因：{}！'.format(e), icon=':material/error:')
 

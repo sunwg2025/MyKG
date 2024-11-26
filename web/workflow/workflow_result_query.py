@@ -2,13 +2,6 @@ import streamlit as st
 from web.database.workflow import Workflow
 from web.database.workflow_task import Workflow_Task
 from web.database.dataset import Dataset
-from web.database.knowledge import Knowledge
-from web.tools.model import extract_entity_knowledge, extract_attribute_knowledge, extract_relation_knowledge
-from web.tools.knowledge import load_knowledge_from_xml, add_knowledge_entity, add_knowledge_attribute
-from web.tools.knowledge import add_knowledge_relation
-from datetime import datetime
-from web.database import session
-from concurrent.futures import ThreadPoolExecutor
 
 
 st.header('工作流结果查询')

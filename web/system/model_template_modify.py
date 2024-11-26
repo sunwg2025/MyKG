@@ -1,7 +1,5 @@
 import streamlit as st
 from web.database.model_template import Model_Template
-from web.database import session
-from web.tools.model import check_model_config
 
 st.header('模型模板管理')
 st.session_state.current_page = 'model_template_modify_page'
@@ -34,7 +32,6 @@ with st.form("submit"):
                 Model_Template.delete_model_template_by_id(model_template_id)
                 st.success('模型模板删除成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('模型模板删除失败，错误原因：{}！'.format(e), icon=':material/error:')
         else:
             try:
@@ -42,6 +39,5 @@ with st.form("submit"):
                 model_template.update_model_template_columns(new)
                 st.success('模型模板更新成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('模型模板更新失败，错误原因：{}！'.format(e), icon=':material/error:')
 

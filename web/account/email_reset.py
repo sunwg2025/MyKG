@@ -2,8 +2,7 @@ import streamlit as st
 import time
 from web.tools.mail import send_reset_mail_email
 from web.database.user import User
-from web.database import session
-from web.tools.validator import check_email_format, check_password_format, check_username_format
+from web.tools.validator import check_email_format
 from web.tools.token import generate_token, validate_token
 
 if 'reset_mail_sendmail_time' not in st.session_state:

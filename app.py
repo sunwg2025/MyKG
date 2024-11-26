@@ -61,6 +61,7 @@ workflow_execute_page = st.Page('web/workflow/workflow_execute.py', title='工�
 workflow_execute_backend_page = st.Page('web/workflow/workflow_execute_backend.py', title='工作流执行-后台', icon=':material/play_circle:')
 workflow_result_query_page = st.Page('web/workflow/workflow_result_query.py', title='工作流结果查询', icon=':material/play_circle:')
 
+
 # 系统管理
 quick_guide_page = st.Page('web/system/quick_guide.py', title='快速指南', icon=':material/description:')
 admin_prompt_create_page = st.Page('web/system/admin_prompt_create.py', title='提示词创建', icon=':material/edit_calendar:')

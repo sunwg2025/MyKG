@@ -1,7 +1,6 @@
 import streamlit as st
 from web.database.issue import Issue
 from datetime import datetime
-from web.database import session
 
 st.header('系统问题解决')
 st.session_state.current_page = 'issue_modify_page'
@@ -34,13 +33,9 @@ with st.form('更新问题'):
             try:
                 issue_id = unfixed_issue_select.split(':')[0]
                 issue = Issue.get_issues_by_id(issue_id)
-                issue.fixed = is_fixed
-                issue.comment = comment
-                issue.update_at = datetime.now()
-                session.commit()
+                issue.update_issue_to_fixed(is_fixed, comment)
                 st.success('系统问题更新成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('系统问题更新失败，错误原因：{}！'.format(e), icon=':material/error:')
 
 with st.container(border=True):

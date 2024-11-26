@@ -3,6 +3,7 @@ from agentscope.message import Msg
 from agentscope.agents import KnowledgeAgent, DialogAgent
 from agentscope.parsers import MarkdownJsonDictParser
 from web.database.system_prompt import System_Prompt
+import re
 from web.tools.other import is_valid_list_format
 import json
 
@@ -35,6 +36,11 @@ def call_knowledge_agent_base(model_configs, sys_prompt, extract_parse, dataset_
     return agent_result['分析结果']
 
 
+def is_alnum_chinese(s):
+    pattern = re.compile(r'^[\w\u4e00-\u9fa5]+$')
+    return bool(pattern.match(s))
+
+
 def extract_entity_knowledge(dataset_content, model_content, character, extract_prompt, extract_parse):
     model_configs = eval(model_content)
     sys_prompt = character + ' ' + extract_prompt
@@ -59,7 +65,7 @@ def extract_attribute_knowledge(dataset_content, entity_content, model_content, 
             agent_result = call_knowledge_agent_base(model_configs, sys_prompt, extract_parse, dataset_content)
             for res in agent_result:
                 if len(res) == 3:
-                    if res[0] in entity_list:
+                    if res[0] in entity_list and is_alnum_chinese(res[0]):
                         extract_result.append(res)
             return extract_result
         except Exception as e:
@@ -78,7 +84,7 @@ def extract_relation_knowledge(dataset_content, entity_content, model_content, c
             agent_result = call_knowledge_agent_base(model_configs, sys_prompt, extract_parse, dataset_content)
             for res in agent_result:
                 if len(res) == 3:
-                    if res[0] in entity_list and res[2] in entity_list:
+                    if res[0] in entity_list and res[2] in entity_list and is_alnum_chinese(res[1]):
                         extract_result.append(res)
             return extract_result
         except Exception as e:

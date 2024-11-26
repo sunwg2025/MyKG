@@ -1,6 +1,5 @@
 import streamlit as st
 from web.database.user import User
-from web.database import session
 from web.tools.validator import check_email_format, check_password_format
 
 st.header('用户登入')
@@ -27,7 +26,7 @@ with st.form('login'):
             st.error('密码输入不正确，请重新输入！', icon=':material/error:')
             error = True
         if not error:
-            user = session.query(User).filter(User.email == email).first()
+            user = User.get_user_by_email(email)
             if user.verify_password(password):
                 st.success('用户登入成功！', icon=':material/done:')
                 st.session_state.logged_in = True

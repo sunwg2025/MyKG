@@ -6,8 +6,6 @@ from web.tools.knowledge import remove_knowledge_attribute, remove_knowledge_rel
 from web.tools.knowledge import add_knowledge_relation, add_knowledge_attribute, add_knowledge_entity
 import graphviz
 from datetime import datetime
-from web.database import session
-
 
 st.header('知识库变更')
 st.session_state.current_page = 'knowledge_modify_page'
@@ -72,7 +70,6 @@ with st.container(border=True):
         entity_node = attribute['实体']
         entity_attributes[entity_node].append(attribute)
     for relation in relations:
-        print('aaaaa', relation)
         entity_node1 = relation['实体1']
         entity_node2 = relation['实体2']
         entity_relations[entity_node1].append(relation)
@@ -154,11 +151,8 @@ with st.container(border=True):
                 add_knowledge_entity(graph, entity)
             try:
                 rdf_xml = graph.serialize(format='xml')
-                knowledge.rdf_xml = rdf_xml
-                knowledge.update_at = datetime.now()
-                session.commit()
+                knowledge.update_knowledge_rdf_xml(rdf_xml)
                 graph.close()
                 st.success('知识库更新成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('知识库更新失败，错误原因：{}！'.format(e), icon=':material/error:')

@@ -1,7 +1,6 @@
 import streamlit as st
 from web.database.model_template import Model_Template
 from web.database.model import Model
-from web.database import session
 from web.tools.model import check_model_config
 
 st.header('模型创建')
@@ -44,9 +43,7 @@ with st.form('submit'):
                               owner=st.session_state.current_username,
                               content=model_content,
                               is_default=is_default)
-                session.add(model)
-                session.commit()
+                Model.create_model(model)
                 st.success('模型创建成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('模型创建失败，错误原因：{}！'.format(e), icon=':material/error:')

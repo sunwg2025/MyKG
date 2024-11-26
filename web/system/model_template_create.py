@@ -1,6 +1,5 @@
 import streamlit as st
 from web.database.model_template import Model_Template
-from web.database import session
 
 st.header('模型模版创建')
 st.session_state.current_page = 'model_template_create_page'
@@ -17,11 +16,9 @@ with st.form('submit'):
             error = True
         if not error:
             try:
-                template = Model_Template(name=template_name,
-                                          content=template_content)
-                session.add(template)
-                session.commit()
+                model_template = Model_Template(name=template_name,
+                                                content=template_content)
+                Model_Template.create_model_template(model_template)
                 st.success('模板文件创建成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('模板文件创建失败，错误原因：{}！'.format(e), icon=':material/error:')

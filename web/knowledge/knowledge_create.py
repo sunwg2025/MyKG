@@ -1,8 +1,6 @@
 import streamlit as st
 from web.database.knowledge import Knowledge
-from web.database import session
 from web.tools.knowledge import get_knowledge_stats
-import pandas as pd
 
 st.header('知识库创建')
 st.session_state.current_page = 'knowledge_create_page'
@@ -31,11 +29,9 @@ if type == '新创建空库':
                                           owner=st.session_state.current_username,
                                           rdf_xml=empty_rdf_xml,
                                           rdf_xml_online=empty_rdf_xml)
-                    session.add(knowledge)
-                    session.commit()
+                    Knowledge.create_knowledge(knowledge)
                     st.success('知识库创建成功！', icon=':material/done:')
                 except Exception as e:
-                    session.rollback()
                     st.error('知识库创建失败，错误原因：{}！'.format(e), icon=':material/error:')
 
 else:
@@ -74,9 +70,7 @@ else:
                                           owner=st.session_state.current_username,
                                           rdf_xml=rdf_xml_online,
                                           rdf_xml_online=rdf_xml_online)
-                    session.add(knowledge)
-                    session.commit()
+                    Knowledge.create_knowledge(knowledge)
                     st.success('知识库创建成功！', icon=':material/done:')
                 except Exception as e:
-                    session.rollback()
                     st.error('知识库创建失败，错误原因：{}！'.format(e), icon=':material/error:')

@@ -1,9 +1,8 @@
-import rdflib
 import io
-from rdflib.namespace import Namespace
-from rdflib import Graph, URIRef, Literal, BNode
-from rdflib.plugins.sparql import prepareQuery
 import re
+from rdflib.namespace import Namespace
+from rdflib import Graph, Literal
+from rdflib.plugins.sparql import prepareQuery
 
 ns = Namespace("http://example.org/kg/")
 base_entity = ns['实体']
@@ -13,10 +12,13 @@ is_belong_to = ns['类型']
 
 
 def load_knowledge_from_xml(xml_str):
-    graph = Graph()
-    xml_file = io.StringIO(xml_str)
-    graph.parse(xml_file, format='xml')
-    return graph
+    try:
+        graph = Graph()
+        xml_file = io.StringIO(xml_str)
+        graph.parse(xml_file, format='xml')
+        return graph
+    except Exception as e:
+        raise e
 
 
 def add_knowledge_entity(graph, entity):

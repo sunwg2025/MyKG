@@ -1,4 +1,4 @@
-from web.database import Base, session
+from web.database import Base, Session
 from sqlalchemy import Column, String, Integer, Boolean, DateTime, Text
 from sqlalchemy.sql import func
 
@@ -21,12 +21,37 @@ class Experiment_Log(Base):
         super(Experiment_Log, self).__init__(**kwargs)
 
     @staticmethod
+    def create_experiment_log(experiment_log):
+        try:
+            session = Session()
+            session.add(experiment_log)
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
+
+    @staticmethod
     def get_experiment_logs_by_experiment_id(experiment_id):
-        return session.query(Experiment_Log).filter(Experiment_Log.experiment_id == experiment_id).all()
+        try:
+            session = Session()
+            return session.query(Experiment_Log).filter(Experiment_Log.experiment_id == experiment_id).all()
+        except Exception as e:
+            raise e
+        finally:
+            session.close()
 
     @staticmethod
     def get_experiment_logs_by_experiment_id_and_type(experiment_id, type):
-        return session.query(Experiment_Log).filter(Experiment_Log.experiment_id == experiment_id, Experiment_Log.type == type).all()
+        try:
+            session = Session()
+            return session.query(Experiment_Log).filter(Experiment_Log.experiment_id == experiment_id,
+                                                        Experiment_Log.type == type).all()
+        except Exception as e:
+            raise e
+        finally:
+            session.close()
 
     def __repr__(self):
         return '<Experiment_Log %r>' % self.id

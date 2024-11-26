@@ -1,5 +1,4 @@
 import streamlit as st
-from web.database import session
 from web.database.dataset import Dataset
 from web.database.dataset_split import Dataset_Split
 
@@ -41,17 +40,15 @@ with st.form('submit'):
     dataset_name = st.text_input('数据集名', value=dataset_name)
     catalog_name = st.text_input('数据类目', value=catalog_name)
 
-
-    delete = st.toggle('删除')
+    delete_dataset = st.toggle('删除数据集')
     submit_button = st.form_submit_button('提交')
     if submit_button:
         dataset_id = dataset_select.split(':')[0]
-        if delete:
+        if delete_dataset:
             try:
                 Dataset.delete_dataset_by_id(dataset_id)
                 st.success('数据集删除成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('数据集删除失败，错误原因：{}！'.format(e), icon=':material/error:')
         else:
             error = False
@@ -63,10 +60,8 @@ with st.form('submit'):
                     dataset = Dataset.get_dataset_by_id(dataset_id)
                     new = Dataset(catalog=catalog_name,
                                   name=dataset_name,
-                                  content=content,
                                   tags=tags)
                     dataset.update_dataset_columns(new)
                     st.success('数据集更新成功！', icon=':material/done:')
                 except Exception as e:
-                    session.rollback()
                     st.error('数据集更新失败，错误原因：{}！'.format(e), icon=':material/error:')

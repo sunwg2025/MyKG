@@ -2,7 +2,6 @@ import streamlit as st
 import time
 from web.tools.mail import send_confirm_email
 from web.database.user import User
-from web.database import session
 from web.tools.validator import check_email_format, check_password_format, check_username_format
 from web.tools.token import generate_token, validate_token
 
@@ -103,11 +102,9 @@ with st.form('register'):
                             password=password,
                             confirmed=True,
                             enabled=True)
-                session.add(user)
-                session.commit()
+                User.create_user(user)
                 st.success('用户注册成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('用户创建失败，错误原因：{}！'.format(e), icon=':material/error:')
 
 

@@ -1,10 +1,8 @@
 import streamlit as st
 from web.database.knowledge import Knowledge
-from web.database import session
 from web.tools.knowledge import get_knowledge_stats
 
 st.header('知识库删除')
-
 st.session_state.current_page = 'knowledge_delete_page'
 
 with st.form('submit'):
@@ -34,5 +32,4 @@ with st.form('submit'):
                 Knowledge.delete_knowledge_by_id(knowledge_id)
                 st.success('知识库删除成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('知识库删除失败，错误原因：{}！'.format(e), icon=':material/error:')

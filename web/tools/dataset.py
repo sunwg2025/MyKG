@@ -1,13 +1,12 @@
-import pandas as pd
 import io
 import re
 import os
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 import PyPDF2
-import streamlit as st
-from web.tools import funasr_model
 import pandas as pd
 import numpy as np
+import streamlit as st
+from web.tools import funasr_model
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
 def split_structured_data(data_content, row_limit, size_limit):

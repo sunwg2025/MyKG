@@ -1,6 +1,5 @@
 import streamlit as st
 from web.database.system_prompt import System_Prompt
-from web.database import session
 
 st.header('工具提示词变更')
 st.session_state.current_page = 'system_prompt_modify_page'
@@ -23,16 +22,13 @@ with st.form('tags'):
                 System_Prompt.update_system_prompt_by_name('Tags_Analyze', tags_analyze, tags_result)
                 st.success('工具提示词更新成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('工具提示词更新失败，错误原因：{}！'.format(e), icon=':material/error:')
         else:
             try:
                 system_prompt = System_Prompt(name='Tags_Analyze', content=tags_analyze, result=tags_result)
-                session.add(system_prompt)
-                session.commit()
+                System_Prompt.create_system_prompt(system_prompt)
                 st.success('工具提示词创建成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('工具提示词创建失败，错误原因：{}！'.format(e), icon=':material/error:')
 
 
@@ -54,16 +50,13 @@ with st.form('summary'):
                 System_Prompt.update_system_prompt_by_name('Summary_Analyze', summary_analyze, summary_result)
                 st.success('工具提示词更新成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('工具提示词更新失败，错误原因：{}！'.format(e), icon=':material/error:')
         else:
             try:
                 system_prompt = System_Prompt(name='Summary_Analyze', content=summary_analyze, result=summary_result)
-                session.add(system_prompt)
-                session.commit()
+                System_Prompt.create_system_prompt(system_prompt)
                 st.success('工具提示词创建成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('工具提示词创建失败，错误原因：{}！'.format(e), icon=':material/error:')
 
 
@@ -85,16 +78,13 @@ with st.form('entities'):
                 System_Prompt.update_system_prompt_by_name('Entities_Analyze', entities_analyze, entities_result)
                 st.success('工具提示词更新成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('工具提示词更新失败，错误原因：{}！'.format(e), icon=':material/error:')
         else:
             try:
                 system_prompt = System_Prompt(name='Entities_Analyze', content=entities_analyze, result=entities_result)
-                session.add(system_prompt)
-                session.commit()
+                System_Prompt.create_system_prompt(system_prompt)
                 st.success('工具提示词创建成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('工具提示词创建失败，错误原因：{}！'.format(e), icon=':material/error:')
 
 
@@ -116,16 +106,13 @@ with st.form('knowledges'):
                 System_Prompt.update_system_prompt_by_name('Knowledges_Choose', knowledges_choose, knowledges_result)
                 st.success('工具提示词更新成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('工具提示词更新失败，错误原因：{}！'.format(e), icon=':material/error:')
         else:
             try:
                 system_prompt = System_Prompt(name='Knowledges_Choose', content=knowledges_choose, result=knowledges_result)
-                session.add(system_prompt)
-                session.commit()
+                System_Prompt.create_system_prompt(system_prompt)
                 st.success('工具提示词创建成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('工具提示词创建失败，错误原因：{}！'.format(e), icon=':material/error:')
 
 
@@ -147,14 +134,11 @@ with st.form('answer'):
                 System_Prompt.update_system_prompt_by_name('Knowledges_Answer', knowledges_answer, answers_result)
                 st.success('工具提示词更新成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('工具提示词更新失败，错误原因：{}！'.format(e), icon=':material/error:')
         else:
             try:
                 system_prompt = System_Prompt(name='Knowledges_Answer', content=knowledges_answer, result=answers_result)
-                session.add(system_prompt)
-                session.commit()
+                System_Prompt.create_system_prompt(system_prompt)
                 st.success('工具提示词创建成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('工具提示词创建失败，错误原因：{}！'.format(e), icon=':material/error:')

@@ -1,6 +1,5 @@
 import streamlit as st
 from web.database.prompt import Prompt
-from web.database import session
 
 st.header('提示词创建')
 st.session_state.current_page = 'prompt_create_page'
@@ -61,5 +60,4 @@ with st.form('submit'):
                 Prompt.create_from_base(prompt_name, prompt_id)
                 st.success('提示词创建成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('提示词创建失败，错误原因：{}！'.format(e), icon=':material/error:')

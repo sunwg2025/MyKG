@@ -1,6 +1,5 @@
 import streamlit as st
 from web.database.issue import Issue
-from web.database import session
 
 st.header('系统问题提交')
 st.session_state.current_page = 'issue_create_page'
@@ -34,11 +33,9 @@ with st.form('submit'):
                               title=issue_title,
                               detail=issue_detail,
                               fixed=False)
-                session.add(issue)
-                session.commit()
+                Issue.create_issue(issue)
                 st.success('系统问题提交成功，会尽快完成修复，谢谢支持！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('系统问题提交失败，错误原因：{}！'.format(e), icon=':material/error:')
 
 with st.container(border=True):

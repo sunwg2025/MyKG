@@ -7,7 +7,6 @@ from web.database.prompt import Prompt
 from web.database.knowledge import Knowledge
 from web.database.workflow import Workflow
 from web.database.workflow_task import Workflow_Task
-from web.database import session
 from web.tools.knowledge import load_knowledge_from_xml, get_all_entity_knowledge, get_all_attribute_knowledge
 from web.tools.knowledge import get_all_relation_knowledge
 
@@ -128,8 +127,9 @@ with st.container(border=True):
                                     experiment_id=experiment.id,
                                     dataset_ids=str(dataset_ids),
                                     knowledge_id=knowledge_id)
-                session.add(workflow)
+                Workflow.create_workflow(workflow)
                 workflow = Workflow.get_workflow_by_owner_name(workflow_name)
+                my_workflow_tasks = []
                 for dataset_id in dataset_ids:
                     dataset = Dataset.get_dataset_by_id(dataset_id)
                     prompt = Prompt.get_prompt_by_id(experiment.prompt_id)
@@ -157,9 +157,8 @@ with st.container(border=True):
                                                       relation_model_content=relation_model.content,
                                                       relation_extract=prompt.relation_extract,
                                                       relation_extract_parse=prompt.relation_extract_parse)
-                        session.add(workflow_task)
-                session.commit()
+                        my_workflow_tasks.append(workflow_task)
+                Workflow_Task.create_workflow_tasks_batch()
                 st.success('工作流创建成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('工作流创建失败，错误原因：{}！'.format(e), icon=':material/error:')

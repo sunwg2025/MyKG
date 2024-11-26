@@ -1,7 +1,7 @@
-from web.database import Base, session
+from web.database import Base, Session
 from sqlalchemy import Column, String, Integer, Boolean, DateTime, Text
 from sqlalchemy.sql import func
-import streamlit as st
+from datetime import datetime
 
 
 class Workflow_Task(Base):
@@ -37,12 +37,71 @@ class Workflow_Task(Base):
         super(Workflow_Task, self).__init__(**kwargs)
 
     @staticmethod
+    def create_workflow_tasks_batch(workflow_tasks_batch):
+        try:
+            session = Session()
+            for workflow_task in workflow_tasks_batch:
+                session.add(workflow_task)
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
+
+    @staticmethod
     def get_workflow_tasks_by_workflow_id(workflow_id):
-        return session.query(Workflow_Task).filter(Workflow_Task.workflow_id == workflow_id).all()
+        try:
+            session = Session()
+            return session.query(Workflow_Task).filter(Workflow_Task.workflow_id == workflow_id).all()
+        except Exception as e:
+            raise e
+        finally:
+            session.close()
 
     @staticmethod
     def get_workflow_task_by_id(id):
-        return session.query(Workflow_Task).filter(Workflow_Task.id == id).first()
+        try:
+            session = Session()
+            return session.query(Workflow_Task).filter(Workflow_Task.id == id).first()
+        except Exception as e:
+            raise e
+        finally:
+            session.close()
+
+    @staticmethod
+    def clear_workflow_task_by_id(id):
+        try:
+            session = Session()
+            workflow_task = Workflow_Task.get_workflow_task_by_id(id)
+            workflow_task.entity_extract_result = None
+            workflow_task.attribute_extract_result = None
+            workflow_task.relation_extract_result = None
+            workflow_task.start_at = None
+            workflow_task.finish_at = None
+            workflow_task.update_at = datetime.now()
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
+
+    def update_workflow_task(self, entity_extract_result, attribute_extract_result, relation_extract_result, task_start_at):
+        try:
+            session = Session()
+            self.entity_extract_result = str(entity_extract_result)
+            self.attribute_extract_result = str(attribute_extract_result)
+            self.relation_extract_result = str(relation_extract_result)
+            self.start_at = task_start_at
+            self.finish_at = datetime.now()
+            self.update_at = datetime.now()
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
 
     def __repr__(self):
         return '<Workflow_Task %r>' % self.id

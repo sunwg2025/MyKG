@@ -1,6 +1,5 @@
 import streamlit as st
 from web.database.prompt import Prompt
-from web.database import session
 
 st.header('提示词变更')
 st.session_state.current_page = 'prompt_modify_page'
@@ -60,7 +59,6 @@ with st.form("submit"):
                 Prompt.delete_prompt_by_id(prompt_id)
                 st.success('提示词删除成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('提示词删除失败，错误原因：{}！'.format(e), icon=':material/error:')
         else:
             error = False
@@ -81,5 +79,4 @@ with st.form("submit"):
                     prompt.update_prompt_columns(new)
                     st.success('提示词更新成功！', icon=':material/done:')
                 except Exception as e:
-                    session.rollback()
                     st.error('提示词失败，错误原因：{}！'.format(e), icon=':material/error:')

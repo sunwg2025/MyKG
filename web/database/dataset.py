@@ -1,4 +1,4 @@
-from web.database import Base, session
+from web.database import Base, Session
 from sqlalchemy import Column, String, Integer, Boolean, DateTime, Text
 from sqlalchemy.sql import func
 import streamlit as st
@@ -23,12 +23,36 @@ class Dataset(Base):
         super(Dataset, self).__init__(**kwargs)
 
     @staticmethod
+    def create_dataset(dataset):
+        try:
+            session = Session()
+            session.add(dataset)
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
+
+    @staticmethod
     def get_datasets_by_owner():
-        return session.query(Dataset).filter(Dataset.owner == st.session_state.current_username).all()
+        try:
+            session = Session()
+            return session.query(Dataset).filter(Dataset.owner == st.session_state.current_username).all()
+        except Exception as e:
+            raise e
+        finally:
+            session.close()
 
     @staticmethod
     def get_dataset_by_id(id):
-        return session.query(Dataset).filter(Dataset.id == id).first()
+        try:
+            session = Session()
+            return session.query(Dataset).filter(Dataset.id == id).first()
+        except Exception as e:
+            raise e
+        finally:
+            session.close()
 
     @staticmethod
     def get_dataset_by_id_list(id_list):
@@ -39,7 +63,14 @@ class Dataset(Base):
 
     @staticmethod
     def get_dataset_by_owner_with_name(name):
-        return session.query(Dataset).filter(Dataset.owner == st.session_state.current_username, Dataset.name == name).first()
+        try:
+            session = Session()
+            return session.query(Dataset).filter(Dataset.owner == st.session_state.current_username,
+                                                 Dataset.name == name).first()
+        except Exception as e:
+            raise e
+        finally:
+            session.close()
 
     @staticmethod
     def get_catalogs_by_owner():
@@ -50,17 +81,31 @@ class Dataset(Base):
         return list(set(catalogs))
 
     def update_dataset_columns(self, new):
-        self.catalog = new.catalog
-        self.name = new.name
-        self.tags = new.tags
-        self.update_at = datetime.now()
-        session.commit()
+        try:
+            session = Session()
+            self.catalog = new.catalog
+            self.name = new.name
+            self.tags = new.tags
+            self.update_at = datetime.now()
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
 
     @staticmethod
     def delete_dataset_by_id(id):
-        dataset = session.query(Dataset).filter(Dataset.id == id).first()
-        session.delete(dataset)
-        session.commit()
+        try:
+            session = Session()
+            dataset = session.query(Dataset).filter(Dataset.id == id).first()
+            session.delete(dataset)
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
 
     def __repr__(self):
         return '<Dataset %r>' % self.name

@@ -1,9 +1,6 @@
 import streamlit as st
 from web.database.knowledge import Knowledge
 from web.tools.knowledge import get_knowledge_stats
-from datetime import datetime
-from web.database import session
-
 
 st.header('知识库管理')
 st.session_state.current_page = 'knowledge_manage_page'
@@ -47,10 +44,7 @@ with st.container(border=True):
                 error = True
             if not error:
                 knowledge_id = knowledge_select.split(':')[0]
-                knowledge = Knowledge.get_knowledge_by_id(knowledge_id)
-                knowledge.rdf_xml_online = knowledge.rdf_xml
-                knowledge.update_at_online = datetime.now()
-                session.commit()
+                Knowledge.update_knowledge_rdf_xml_online(knowledge_id)
                 st.success('知识库上线成功！', icon=':material/done:')
         if st.button("知识库重载<=="):
             error = False
@@ -59,10 +53,7 @@ with st.container(border=True):
                 error = True
             if not error:
                 knowledge_id = knowledge_select.split(':')[0]
-                knowledge = Knowledge.get_knowledge_by_id(knowledge_id)
-                knowledge.rdf_xml = knowledge.rdf_xml_online
-                knowledge.update_at = datetime.now()
-                session.commit()
+                Knowledge.reload_knowledge_rdf_xml(knowledge_id)
                 st.success('知识库重载成功！', icon=':material/done:')
     with col3:
         with st.container(border=True):

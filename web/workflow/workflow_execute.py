@@ -7,12 +7,9 @@ from web.tools.model import extract_entity_knowledge, extract_attribute_knowledg
 from web.tools.knowledge import load_knowledge_from_xml, add_knowledge_entity, add_knowledge_attribute
 from web.tools.knowledge import add_knowledge_relation
 from datetime import datetime
-from web.database import session
-
 
 st.header('工作流执行-前台')
 st.session_state.current_page = 'workflow_execute_page'
-
 
 st.subheader('Step 1：选择工作流', divider=True)
 with st.container(border=True):
@@ -79,6 +76,7 @@ with st.container(border=True):
                 task_start_at = datetime.now()
                 dataset_split_name = edited_data['数据分片']
                 workflow_task_id = edited_data['任务ID']
+                Workflow_Task.clear_workflow_task_by_id(workflow_task_id)
                 workflow_task = Workflow_Task.get_workflow_task_by_id(workflow_task_id)
 
                 entity_extract_result = extract_entity_knowledge(dataset_content=workflow_task.dataset_split_content,
@@ -87,29 +85,43 @@ with st.container(border=True):
                                                                  extract_prompt=workflow_task.entity_extract,
                                                                  extract_parse=workflow_task.entity_extract_parse)
 
-                my_bar.progress(my_bar_progress * index, text='{}% - 数据分片{} : {} 执行完成...'.format(round(index*my_bar_progress*100, 2), dataset_split_name, '实体抽取'))
+                my_bar.progress(my_bar_progress * index,
+                                text='{}% - 数据分片{} : {} 执行完成...'.format(round(index * my_bar_progress * 100, 2),
+                                                                        dataset_split_name, '实体抽取'))
                 index += 1
-                st.text('{}: 数据分片[{}] - {} 执行完成...'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), dataset_split_name, '实体抽取'))
+                st.text(
+                    '{}: 数据分片[{}] - {} 执行完成...'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), dataset_split_name,
+                                                       '实体抽取'))
 
-                attribute_extract_result = extract_attribute_knowledge(dataset_content=workflow_task.dataset_split_content,
-                                                                       model_content=workflow_task.attribute_model_content,
-                                                                       entity_content=str(entity_extract_result),
-                                                                       character=workflow_task.character,
-                                                                       extract_prompt=workflow_task.attribute_extract,
-                                                                       extract_parse=workflow_task.attribute_extract_parse)
-                my_bar.progress(my_bar_progress * index, text='{}% - 数据分片{} : {} 执行完成...'.format(round(index*my_bar_progress*100, 2), dataset_split_name, '属性抽取'))
+                attribute_extract_result = extract_attribute_knowledge(
+                    dataset_content=workflow_task.dataset_split_content,
+                    model_content=workflow_task.attribute_model_content,
+                    entity_content=str(entity_extract_result),
+                    character=workflow_task.character,
+                    extract_prompt=workflow_task.attribute_extract,
+                    extract_parse=workflow_task.attribute_extract_parse)
+                my_bar.progress(my_bar_progress * index,
+                                text='{}% - 数据分片{} : {} 执行完成...'.format(round(index * my_bar_progress * 100, 2),
+                                                                        dataset_split_name, '属性抽取'))
                 index += 1
-                st.text('{}: 数据分片[{}] - {} 执行完成...'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), dataset_split_name, '属性抽取'))
+                st.text(
+                    '{}: 数据分片[{}] - {} 执行完成...'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), dataset_split_name,
+                                                       '属性抽取'))
 
-                relation_extract_result = extract_relation_knowledge(dataset_content=workflow_task.dataset_split_content,
-                                                                     model_content=workflow_task.relation_model_content,
-                                                                     entity_content=str(entity_extract_result),
-                                                                     character=workflow_task.character,
-                                                                     extract_prompt=workflow_task.relation_extract,
-                                                                     extract_parse=workflow_task.relation_extract_parse)
-                my_bar.progress(my_bar_progress * index, text='{}% - 数据分片{} : {} 执行完成...'.format(round(index*my_bar_progress*100, 2), dataset_split_name, '关系抽取'))
+                relation_extract_result = extract_relation_knowledge(
+                    dataset_content=workflow_task.dataset_split_content,
+                    model_content=workflow_task.relation_model_content,
+                    entity_content=str(entity_extract_result),
+                    character=workflow_task.character,
+                    extract_prompt=workflow_task.relation_extract,
+                    extract_parse=workflow_task.relation_extract_parse)
+                my_bar.progress(my_bar_progress * index,
+                                text='{}% - 数据分片{} : {} 执行完成...'.format(round(index * my_bar_progress * 100, 2),
+                                                                        dataset_split_name, '关系抽取'))
                 index += 1
-                st.text('{}: 数据分片[{}] - {} 执行完成...'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), dataset_split_name, '关系抽取'))
+                st.text(
+                    '{}: 数据分片[{}] - {} 执行完成...'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), dataset_split_name,
+                                                       '关系抽取'))
 
                 knowledge = Knowledge.get_knowledge_by_id(workflow.knowledge_id)
                 graph = load_knowledge_from_xml(knowledge.rdf_xml)
@@ -135,25 +147,20 @@ with st.container(border=True):
                         continue
                 try:
                     rdf_xml = graph.serialize(format='xml')
-                    knowledge.rdf_xml = rdf_xml
-                    knowledge.update_at = datetime.now()
-                    session.commit()
+                    knowledge.update_knowledge_rdf_xml(rdf_xml)
                     graph.close()
                 except Exception as e:
-                    session.rollback()
                     st.error('知识库更新失败，错误原因：{}！'.format(e), icon=':material/error:')
 
                 try:
-                    workflow_task.entity_extract_result = str(entity_extract_result)
-                    workflow_task.attribute_extract_result = str(attribute_extract_result)
-                    workflow_task.relation_extract_result = str(relation_extract_result)
-                    workflow_task.start_at = task_start_at
-                    workflow_task.finish_at = datetime.now()
-                    workflow_task.update_at = datetime.now()
-                    session.commit()
+                    workflow_task.update_workflow_task(str(entity_extract_result), str(attribute_extract_result),
+                                                       str(relation_extract_result), task_start_at)
                 except Exception as e:
-                    session.rollback()
                     st.error('工作流任务更新失败，错误原因：{}！'.format(e), icon=':material/error:')
-                my_bar.progress(my_bar_progress * index, text='{}% - 数据分片{} : {} 执行完成...'.format(round(index*my_bar_progress*100, 2), dataset_split_name, '知识库更新'))
+                my_bar.progress(my_bar_progress * index,
+                                text='{}% - 数据分片{} : {} 执行完成...'.format(round(index * my_bar_progress * 100, 2),
+                                                                        dataset_split_name, '知识库更新'))
                 index += 1
-                st.text('{}: 数据分片[{}] - {} 执行完成...'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), dataset_split_name, '知识库更新'))
+                st.text(
+                    '{}: 数据分片[{}] - {} 执行完成...'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), dataset_split_name,
+                                                       '知识库更新'))

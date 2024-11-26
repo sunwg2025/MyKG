@@ -1,7 +1,6 @@
 import streamlit as st
 from web.database.dataset import Dataset
 from web.database.model import Model
-from web.database import session
 from web.tools.model import analyze_content_tags
 from io import StringIO
 

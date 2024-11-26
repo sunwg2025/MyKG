@@ -4,9 +4,7 @@ from web.database.dataset import Dataset
 from web.tools.dataset import split_structured_data, get_csv_row_count, get_csv_file_header, split_structured_csv_data
 from web.tools.dataset import create_dataframe_from_text, create_dataframe_from_csv
 from web.database.dataset_split import Dataset_Split
-from web.database import session
 import pandas as pd
-import io
 from io import StringIO
 
 st.header('结构化数据集创建')
@@ -211,10 +209,11 @@ with st.container(border=True):
                                       tags=dataset_tags,
                                       total_size=dataset_total_chr_cnt,
                                       split_count=len(dataset_splits))
-                    session.add(dataset)
+                    Dataset.create_dataset(dataset)
                     dataset_un_commit = Dataset.get_dataset_by_owner_with_name(tmp_dataset_name)
                     split_ind = 1
                     summary_content = ''
+                    my_dataset_splits = []
                     for dataset_split in dataset_splits:
                         if split_ind < 10:
                             split_name = '{}_0{}'.format(tmp_dataset_name, str(split_ind))
@@ -227,13 +226,12 @@ with st.container(border=True):
                                                       split_seq=split_ind,
                                                       total_size=len(dataset_split),
                                                       content=dataset_split)
+                        my_dataset_splits.append(dataset_split)
                         split_ind += 1
-                        session.add(dataset_split)
+                    Dataset_Split.create_dataset_split_batch(my_dataset_splits)
                     ind += 1
-                session.commit()
                 st.success('数据集创建成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('数据集创建失败，错误原因：{}！'.format(e), icon=':material/error:')
 
 

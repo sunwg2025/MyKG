@@ -6,8 +6,6 @@ from web.database.dataset_split import Dataset_Split
 from web.database.prompt import Prompt
 from web.database.experiment_log import Experiment_Log
 from web.tools.model import extract_relation_knowledge
-from web.database import session
-from datetime import datetime
 
 st.header('关系抽取实验')
 
@@ -219,8 +217,7 @@ else:
                                                     model_id=model_id,
                                                     extract_prompt=extract_prompt,
                                                     extract_result=str(extract_result))
-                    session.add(experiment_log)
-                    session.commit()
+                    Experiment_Log.create_experiment_log(experiment_log)
 
                     my_bar.progress(my_bar_progress * index, text=progress_text)
                     index += 1
@@ -239,21 +236,15 @@ else:
             error = False
             if save_prompt:
                 try:
-                    prompt.relation_extract = extract_prompt
-                    prompt.update_at = datetime.utcnow()
-                    session.commit()
+                    prompt.update_prompt_relation_extract(extract_prompt)
                 except Exception as e:
-                    session.rollback()
                     error = True
                     st.error('提示词更新失败，错误原因：{}！'.format(e), icon=':material/error:')
             if not error:
                 try:
-                    experiment.relation_extract_model_id = result_select.split(':')[0]
-                    experiment.update_at = datetime.utcnow()
-                    session.commit()
+                    experiment.update_experiment_relation_extract_model_id(result_select.split(':')[0])
                     st.success('知识实验更新成功！', icon=':material/done:')
                 except Exception as e:
-                    session.rollback()
                     error = True
                     st.error('知识实验更新失败，错误原因：{}！'.format(e), icon=':material/error:')
 

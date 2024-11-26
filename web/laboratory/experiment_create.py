@@ -2,8 +2,6 @@ import streamlit as st
 from web.database.model import Model
 from web.database.experiment import Experiment
 from web.database.prompt import Prompt
-from web.database import session
-from web.database.workflow import Workflow
 
 st.header('知识构建实验')
 st.session_state.current_page = 'experiment_create_page'
@@ -88,9 +86,7 @@ with st.container(border=True):
                                         owner=st.session_state.current_username,
                                         prompt_id=prompt_id,
                                         model_ids=str(model_ids))
-                session.add(experiment)
-                session.commit()
+                Experiment.create_experiment(experiment)
                 st.success('知识实验创建成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('知识实验创建失败，错误原因：{}！'.format(e), icon=':material/error:')

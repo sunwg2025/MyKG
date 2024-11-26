@@ -2,8 +2,7 @@ import streamlit as st
 import time
 from web.tools.mail import send_reset_password_email
 from web.database.user import User
-from web.database import session
-from web.tools.validator import check_email_format, check_password_format, check_username_format
+from web.tools.validator import check_email_format, check_password_format
 from web.tools.token import generate_token, validate_token
 
 
@@ -92,5 +91,4 @@ with st.form('reset'):
                 user.update_password(new_password)
                 st.success('用户更新密码成功！', icon=':material/done:')
             except Exception as e:
-                session.rollback()
                 st.error('用户更新密码失败，错误原因：{}！'.format(e), icon=':material/error:')
