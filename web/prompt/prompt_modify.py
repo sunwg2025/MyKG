@@ -32,20 +32,20 @@ if prompt_select is not None:
 
 with st.form("submit"):
     prompt_name_new = st.text_input('提示词名', value=prompt_name)
-    character = st.text_area('角色扮演', value=prompt_character, height=240, max_chars=4096)
+    character = st.text_area('角色扮演', value=prompt_character, height=480, max_chars=4096)
 
     entity, attribute, relation = st.tabs(["实体抽取", "属性抽取", "关系抽取"])
     with entity:
-        entity_extract = st.text_area('实体抽取', value=prompt_entity_extract, height=240, max_chars=4096)
+        entity_extract = st.text_area('提示词', value=prompt_entity_extract, height=360, max_chars=4096)
         entity_extract_parse = st.text_area('结果解析', value=prompt_entity_extract_parse, height=120, max_chars=4096,
                                             key='entity_extract_parse')
     with attribute:
-        attribute_extract = st.text_area('属性抽取', value=prompt_attribute_extract, height=240, max_chars=4096,
+        attribute_extract = st.text_area('提示词', value=prompt_attribute_extract, height=360, max_chars=4096,
                                          key='attribute_extract')
         attribute_extract_parse = st.text_area('结果解析', value=prompt_attribute_extract_parse, height=120,
                                                max_chars=4096, key='attribute_extract_parse')
     with relation:
-        relation_extract = st.text_area('关系抽取', value=prompt_relation_extract, height=240, max_chars=4096,
+        relation_extract = st.text_area('提示词', value=prompt_relation_extract, height=360, max_chars=4096,
                                         key='relation_extract')
         relation_extract_parse = st.text_area('结果解析', value=prompt_relation_extract_parse, height=120,
                                               max_chars=4096, key='relation_extract_parse')
@@ -79,4 +79,4 @@ with st.form("submit"):
                     prompt.update_prompt_columns(new)
                     st.success('提示词更新成功！', icon=':material/done:')
                 except Exception as e:
-                    st.error('提示词失败，错误原因：{}！'.format(e), icon=':material/error:')
+                    st.error('提示词更新失败，错误原因：{}！'.format(e), icon=':material/error:')

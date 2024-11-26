@@ -63,6 +63,7 @@ class Model_Template(Base):
             self.name = new.name
             self.content = new.content
             self.update_at = datetime.now()
+            session.add(self)
             session.commit()
         except Exception as e:
             session.rollback()

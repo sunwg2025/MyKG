@@ -73,7 +73,7 @@ class Workflow_Task(Base):
     def clear_workflow_task_by_id(id):
         try:
             session = Session()
-            workflow_task = Workflow_Task.get_workflow_task_by_id(id)
+            workflow_task = session.query(Workflow_Task).filter(Workflow_Task.id == id).first()
             workflow_task.entity_extract_result = None
             workflow_task.attribute_extract_result = None
             workflow_task.relation_extract_result = None
@@ -90,12 +90,13 @@ class Workflow_Task(Base):
     def update_workflow_task(self, entity_extract_result, attribute_extract_result, relation_extract_result, task_start_at):
         try:
             session = Session()
-            self.entity_extract_result = str(entity_extract_result)
-            self.attribute_extract_result = str(attribute_extract_result)
-            self.relation_extract_result = str(relation_extract_result)
+            self.entity_extract_result = entity_extract_result
+            self.attribute_extract_result = attribute_extract_result
+            self.relation_extract_result = relation_extract_result
             self.start_at = task_start_at
             self.finish_at = datetime.now()
             self.update_at = datetime.now()
+            session.add(self)
             session.commit()
         except Exception as e:
             session.rollback()

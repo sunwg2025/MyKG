@@ -26,22 +26,22 @@ with st.container(border=True):
 
         prompt = Prompt.get_prompt_by_id(experiment.prompt_id)
 
-        prompt_select = st.text('提示词配置：{}'.format(prompt.name))
+        prompt_select = st.text('提示词：{}'.format(prompt.name))
         if experiment.entity_extract_model_id is not None:
             entity_extract_model = Model.get_model_by_id(experiment.entity_extract_model_id)
-            entity_extract_model_select = st.text('实体抽取模型配置：{}'.format(entity_extract_model.name))
+            entity_extract_model_select = st.text('实体抽取模型：{}'.format(entity_extract_model.name))
         else:
-            entity_extract_model_select = st.text('实体抽取模型配置：{}'.format('未配置'))
+            entity_extract_model_select = st.text('实体抽取模型：{}'.format('未配置'))
         if experiment.attribute_extract_model_id is not None:
             attribute_extract_model = Model.get_model_by_id(experiment.attribute_extract_model_id)
-            attribute_extract_model_select = st.text('属性抽取模型配置：{}'.format(attribute_extract_model.name))
+            attribute_extract_model_select = st.text('属性抽取模型：{}'.format(attribute_extract_model.name))
         else:
-            attribute_extract_model_select = st.text('属性抽取模型配置：{}'.format('未配置'))
+            attribute_extract_model_select = st.text('属性抽取模型：{}'.format('未配置'))
         if experiment.relation_extract_model_id is not None:
             relation_extract_model = Model.get_model_by_id(experiment.relation_extract_model_id)
-            relation_extract_model_select = st.text('关系抽取模型配置：{}'.format(relation_extract_model.name))
+            relation_extract_model_select = st.text('关系抽取模型：{}'.format(relation_extract_model.name))
         else:
-            relation_extract_model_select = st.text('关系抽取模型配置：{}'.format('未配置'))
+            relation_extract_model_select = st.text('关系抽取模型：{}'.format('未配置'))
 
 st.subheader('Step 2：选择数据集', divider=True)
 with st.container(border=True):

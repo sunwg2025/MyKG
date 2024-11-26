@@ -120,6 +120,7 @@ class Knowledge(Base):
 			session = Session()
 			self.rdf_xml = rdf_xml
 			self.update_at = datetime.now()
+			session.add(self)
 			session.commit()
 		except Exception as e:
 			session.rollback()

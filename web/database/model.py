@@ -112,6 +112,7 @@ class Model(Base):
             self.content = new.content
             self.is_default = new.is_default
             self.update_at = datetime.now()
+            session.add(self)
             session.commit()
         except Exception as e:
             session.rollback()

@@ -1,7 +1,7 @@
 import streamlit as st
 import math
 from web.database.dataset import Dataset
-from web.tools.dataset import split_structured_data, get_csv_row_count, get_csv_file_header, split_structured_csv_data
+from web.tools.dataset import split_structured_csv_data
 from web.tools.dataset import create_dataframe_from_text, create_dataframe_from_csv
 from web.database.dataset_split import Dataset_Split
 import pandas as pd
@@ -10,7 +10,7 @@ from io import StringIO
 st.header('结构化数据集创建')
 st.session_state.current_page = 'structured_create_page'
 
-data_type_select = st.selectbox('选择数据来源', options=['数据录入', 'CSV文件', 'TXT文件', 'JDBC表'])
+data_type_select = st.selectbox('选择数据来源', options=['数据录入', 'CSV文件', 'TXT文件'])
 
 dataset_contents_detail = []
 channel = ''

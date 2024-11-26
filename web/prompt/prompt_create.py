@@ -28,25 +28,27 @@ if prompt_select is not None:
     prompt_relation_extract = prompt.relation_extract
     prompt_relation_extract_parse = prompt.relation_extract_parse
 
-with st.form('submit'):
-    character = st.text_area('角色扮演', value=prompt_character, height=240, max_chars=4096, disabled=True)
+with st.container(border=True):
+    character = st.text_area('角色扮演', value=prompt_character, height=480, max_chars=4096, disabled=True)
 
+with st.container(border=True):
     entity, attribute, relation = st.tabs(["实体抽取", "属性抽取", "关系抽取"])
     with entity:
-        entity_extract = st.text_area('实体抽取', value=prompt_entity_extract, height=240, max_chars=4096, disabled=True)
-        entity_extract_parse = st.text_area('实体结果解析', value=prompt_entity_extract_parse, height=120, max_chars=4096,
+        entity_extract = st.text_area('提示词', value=prompt_entity_extract, height=360, max_chars=4096, disabled=True)
+        entity_extract_parse = st.text_area('结果解析', value=prompt_entity_extract_parse, height=120, max_chars=4096,
                                             disabled=True)
     with attribute:
-        attribute_extract = st.text_area('属性抽取', value=prompt_attribute_extract, height=240, max_chars=4096,
+        attribute_extract = st.text_area('提示词', value=prompt_attribute_extract, height=360, max_chars=4096,
                                          disabled=True)
-        attribute_extract_parse = st.text_area('属性结果解析', value=prompt_attribute_extract_parse, height=120,
+        attribute_extract_parse = st.text_area('结果解析', value=prompt_attribute_extract_parse, height=120,
                                                max_chars=4096, disabled=True)
     with relation:
-        relation_extract = st.text_area('关系抽取', value=prompt_relation_extract, height=240, max_chars=4096,
+        relation_extract = st.text_area('提示词', value=prompt_relation_extract, height=360, max_chars=4096,
                                         disabled=True)
-        relation_extract_parse = st.text_area('关系结果解析', value=prompt_relation_extract_parse, height=120,
+        relation_extract_parse = st.text_area('结果解析', value=prompt_relation_extract_parse, height=120,
                                               max_chars=4096, disabled=True)
 
+with st.form('submit'):
     prompt_name = st.text_input('提示词名', key='prompt_name')
     submit_button = st.form_submit_button('提交')
     if submit_button:

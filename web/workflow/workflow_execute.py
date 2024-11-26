@@ -28,23 +28,29 @@ with st.container(border=True):
             if workflow_task.finish_at is not None:
                 if_run = False
             dataset = Dataset.get_dataset_by_id(workflow_task.dataset_id)
-            data.append({'是否执行': if_run, '任务ID': workflow_task.id, '数据分片': workflow_task.dataset_split_name,
-                         '实体抽取结果': workflow_task.entity_extract_result,
-                         '属性抽取结果': workflow_task.attribute_extract_result,
-                         '关系抽取结果': workflow_task.relation_extract_result,
-                         '任务开始时间': workflow_task.start_at, '任务结束时间': workflow_task.finish_at})
+            entities_cnt = 0
+            if workflow_task.entity_extract_result is not None:
+                entities_cnt = len(eval(workflow_task.entity_extract_result))
+            attributes_cnt = 0
+            if workflow_task.attribute_extract_result is not None:
+                attributes_cnt = len(eval(workflow_task.attribute_extract_result))
+            relations_cnt = 0
+            if workflow_task.relation_extract_result is not None:
+                relations_cnt = len(eval(workflow_task.relation_extract_result))
+            extract_results = 'EAR：{}-{}-{}'.format(entities_cnt, attributes_cnt, relations_cnt)
+            data.append({'执行': if_run, 'ID': workflow_task.id,
+                         '数据分片': workflow_task.dataset_split_name,
+                         '抽取结果': extract_results,
+                         '抽取时间': workflow_task.finish_at})
 
     column_config = {
-        '是否执行': st.column_config.CheckboxColumn('是否执行', width='small'),
-        '任务ID': st.column_config.NumberColumn('任务ID', width='small'),
-        '数据分片': st.column_config.TextColumn('数据分片', width='small'),
-        '实体抽取结果': st.column_config.TextColumn('实体抽取结果', width='small', help='点击以查看完整数据'),
-        '属性抽取结果': st.column_config.TextColumn('属性抽取结果', width='small', help='点击以查看完整数据'),
-        '关系抽取结果': st.column_config.TextColumn('关系抽取结果', width='small', help='点击以查看完整数据'),
-        '任务开始时间': st.column_config.DatetimeColumn('任务开始时间', width='small'),
-        '任务结束时间': st.column_config.DatetimeColumn('任务结束时间', width='small')
+        '执行': st.column_config.CheckboxColumn('执行', width='small'),
+        'ID': st.column_config.NumberColumn('ID', width='small'),
+        '数据分片': st.column_config.TextColumn('数据分片', width='medium'),
+        '抽取结果': st.column_config.TextColumn('抽取结果', width='medium'),
+        '抽取时间': st.column_config.DatetimeColumn('抽取时间', width='medium')
     }
-    edited_datas = st.data_editor(data, column_config=column_config, hide_index=False, num_rows="fixed",
+    edited_datas = st.data_editor(data, column_config=column_config, hide_index=True, num_rows="fixed",
                                   use_container_width=True)
 
 st.subheader('Step 2：执行工作流', divider=True)
@@ -57,7 +63,7 @@ with st.container(border=True):
         if not error:
             task_cnt = 0
             for edited_data in edited_datas:
-                if edited_data['是否执行']:
+                if edited_data['执行']:
                     task_cnt += 1
             if task_cnt == 0:
                 st.error('请选择要执行的任务！', icon=':material/error:')
@@ -71,11 +77,11 @@ with st.container(border=True):
             st.text('{}: 任务开始执行...'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
             index = 1
             for edited_data in edited_datas:
-                if not edited_data['是否执行']:
+                if not edited_data['执行']:
                     continue
                 task_start_at = datetime.now()
                 dataset_split_name = edited_data['数据分片']
-                workflow_task_id = edited_data['任务ID']
+                workflow_task_id = edited_data['ID']
                 Workflow_Task.clear_workflow_task_by_id(workflow_task_id)
                 workflow_task = Workflow_Task.get_workflow_task_by_id(workflow_task_id)
 
@@ -153,6 +159,7 @@ with st.container(border=True):
                     st.error('知识库更新失败，错误原因：{}！'.format(e), icon=':material/error:')
 
                 try:
+                    workflow_task = Workflow_Task.get_workflow_task_by_id(workflow_task_id)
                     workflow_task.update_workflow_task(str(entity_extract_result), str(attribute_extract_result),
                                                        str(relation_extract_result), task_start_at)
                 except Exception as e:

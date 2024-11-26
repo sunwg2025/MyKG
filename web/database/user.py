@@ -78,6 +78,7 @@ class User(Base):
             session = Session()
             self.password = password
             self.update_at = datetime.now()
+            session.add(self)
             session.commit()
         except Exception as e:
             session.rollback()
@@ -90,6 +91,7 @@ class User(Base):
             session = Session()
             self.email = email
             self.update_at = datetime.now()
+            session.add(self)
             session.commit()
         except Exception as e:
             session.rollback()

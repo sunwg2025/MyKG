@@ -32,17 +32,23 @@ with st.container(border=True):
         relation_extract_value = prompt.relation_extract
         relation_extract_parse_value = prompt.relation_extract_parse
 
-    character = st.text_area('角色扮演', value=character_value, height=240, max_chars=4096, key='character')
+    character = st.text_area('角色扮演', value=character_value, height=240, disabled=True, max_chars=4096, key='character')
     entity, attribute, relation = st.tabs(["实体抽取", "属性抽取", "关系抽取"])
     with entity:
-        entity_extract = st.text_area('实体抽取', value=entity_extract_value, height=240, max_chars=4096, key='entity_extract')
-        entity_extract_parse = st.text_area('结果解析', value=entity_extract_parse_value, height=120, max_chars=4096, key='entity_extract_parse')
+        entity_extract = st.text_area('提示词', value=entity_extract_value, height=240, max_chars=4096,
+                                      disabled=True, key='entity_extract')
+        entity_extract_parse = st.text_area('结果解析', value=entity_extract_parse_value, disabled=True, height=120,
+                                            max_chars=4096, key='entity_extract_parse')
     with attribute:
-        attribute_extract = st.text_area('属性抽取', value=attribute_extract_value, height=240, max_chars=4096, key='attribute_extract')
-        attribute_extract_parse = st.text_area('结果解析', value=attribute_extract_parse_value, height=120, max_chars=4096, key='attribute_extract_parse')
+        attribute_extract = st.text_area('提示词', value=attribute_extract_value, height=240, max_chars=4096,
+                                         disabled=True, key='attribute_extract')
+        attribute_extract_parse = st.text_area('结果解析', value=attribute_extract_parse_value, disabled=True,
+                                               height=120, max_chars=4096, key='attribute_extract_parse')
     with relation:
-        relation_extract = st.text_area('关系抽取', value=relation_extract_value, height=240, max_chars=4096, key='relation_extract')
-        relation_extract_parse = st.text_area('结果解析', value=relation_extract_parse_value, height=120, max_chars=4096, key='relation_extract_parse')
+        relation_extract = st.text_area('提示词', value=relation_extract_value, height=240, max_chars=4096,
+                                        disabled=True, key='relation_extract')
+        relation_extract_parse = st.text_area('结果解析', value=relation_extract_parse_value, disabled=True,
+                                              height=120, max_chars=4096, key='relation_extract_parse')
 
 
 st.subheader('Step 2：选择备选模型', divider=True)

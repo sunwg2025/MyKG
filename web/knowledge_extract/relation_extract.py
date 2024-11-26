@@ -81,38 +81,37 @@ else:
                     if str(dataset_select.split(':')[0]) != str(experiment_log.dataset_id):
                         continue
                 model = Model.get_model_by_id(experiment_log.model_id)
-                data.append({'载入': False, '执行时间': experiment_log.create_at, '数据集': dataset.name, '模型': model.name,
-                             '提示词': experiment_log.extract_prompt, '抽取结果': experiment_log.extract_result})
+                data.append({'载入': False,
+                             '执行时间': experiment_log.create_at,
+                             '模型': model.name,
+                             '抽取结果': experiment_log.extract_result})
 
             column_config = {
                 '载入': st.column_config.CheckboxColumn('载入', width='small'),
                 '执行时间': st.column_config.DatetimeColumn('执行时间', disabled=True, width='small'),
-                '数据集': st.column_config.TextColumn('数据集', disabled=True, width='small'),
                 '模型': st.column_config.TextColumn('模型', disabled=True, width='small'),
-                '提示词': st.column_config.TextColumn('提示词', disabled=True, width='large', help='点击以查看完整数据'),
                 '抽取结果': st.column_config.TextColumn('抽取结果', disabled=True, width='large', help='点击以查看完整数据')
             }
             edited_datas = st.data_editor(data, column_config=column_config, hide_index=False, num_rows="fixed",
                                           use_container_width=True)
-            col1, col2 = st.columns(2)
-            with col1:
-                if st.button('载入实体'):
-                    error = False
-                    entity_results = []
-                    for edited_data in edited_datas:
-                        if edited_data['载入']:
-                            entity_results.append(edited_data['抽取结果'])
-                    if len(entity_results) == 0:
-                        st.error('请选择需要载入的记录！', icon=':material/error:')
-                        error = True
-                    if len(entity_results) > 1 and not error:
-                        st.error('选择的载入记录超过1条，请重新选择！', icon=':material/error:')
-                        error = True
-                    if not error:
-                        st.session_state.entity_extract_result = str(entity_results[0])
-            with col2:
-                if st.button("关闭"):
-                    st.rerun()
+
+            if st.button('载入实体'):
+                error = False
+                entity_results = []
+                for edited_data in edited_datas:
+                    if edited_data['载入']:
+                        entity_results.append(edited_data['抽取结果'])
+                if len(entity_results) == 0:
+                    st.error('请选择需要载入的记录！', icon=':material/error:')
+                    error = True
+                if len(entity_results) > 1 and not error:
+                    st.error('选择的载入记录超过1条，请重新选择！', icon=':material/error:')
+                    error = True
+                if not error:
+                    st.session_state.entity_extract_result = str(entity_results[0])
+                st.rerun()
+
+
         if st.button('载入'):
             entity_logs_view(dataset_select)
 
@@ -132,6 +131,7 @@ else:
                 st.session_state.relation_extract_prompt_reload = True
                 st.rerun()
 
+
             @st.dialog('执行记录', width='large')
             def logs_view():
                 data = []
@@ -140,8 +140,12 @@ else:
                 for experiment_log in experiment_logs:
                     dataset = Dataset.get_dataset_by_id(experiment_log.dataset_id)
                     model = Model.get_model_by_id(experiment_log.model_id)
-                    data.append({'重载': False, '执行时间': experiment_log.create_at, '数据集': dataset.name, '模型': model.name,
-                                 '提示词': experiment_log.extract_prompt, '抽取结果': experiment_log.extract_result})
+                    data.append({'重载': False,
+                                 '执行时间': experiment_log.create_at,
+                                 '数据集': dataset.name,
+                                 '模型': model.name,
+                                 '提示词': experiment_log.extract_prompt,
+                                 '抽取结果': experiment_log.extract_result})
 
                 column_config = {
                     '重载': st.column_config.CheckboxColumn('重载', width='small'),
@@ -153,25 +157,23 @@ else:
                 }
                 edited_datas = st.data_editor(data, column_config=column_config, hide_index=False, num_rows="fixed",
                                               use_container_width=True)
-                col1, col2 = st.columns(2)
-                with col1:
-                    if st.button('重载提示词'):
-                        error = False
-                        extract_prompts = []
-                        for edited_data in edited_datas:
-                            if edited_data['重载']:
-                                extract_prompts.append(edited_data['提示词'])
-                        if len(extract_prompts) == 0:
-                            st.error('请选择需要重载的记录！', icon=':material/error:')
-                            error = True
-                        if len(extract_prompts) > 1 and not error:
-                            st.error('选择的重载记录超过1条，请重新选择！', icon=':material/error:')
-                            error = True
-                        if not error:
-                            st.session_state.relation_extract_prompt_history = extract_prompts[0]
-                with col2:
-                    if st.button('关闭'):
-                        st.rerun()
+
+                if st.button('重载提示词'):
+                    error = False
+                    extract_prompts = []
+                    for edited_data in edited_datas:
+                        if edited_data['重载']:
+                            extract_prompts.append(edited_data['提示词'])
+                    if len(extract_prompts) == 0:
+                        st.error('请选择需要重载的记录！', icon=':material/error:')
+                        error = True
+                    if len(extract_prompts) > 1 and not error:
+                        st.error('选择的重载记录超过1条，请重新选择！', icon=':material/error:')
+                        error = True
+                    if not error:
+                        st.session_state.relation_extract_prompt_history = extract_prompts[0]
+                    st.rerun()
+
 
             if st.button('载入历史'):
                 t = logs_view()
@@ -200,11 +202,11 @@ else:
                     model = Model.get_model_by_id(model_id)
 
                     extract_result = extract_relation_knowledge(dataset_content=dataset_split.content,
-                                                                 model_content=model.content,
-                                                                 entity_content=entity_extract_text,
-                                                                 character=prompt.character,
-                                                                 extract_prompt=extract_prompt,
-                                                                 extract_parse=prompt.relation_extract_parse)
+                                                                model_content=model.content,
+                                                                entity_content=entity_extract_text,
+                                                                character=prompt.character,
+                                                                extract_prompt=extract_prompt,
+                                                                extract_parse=prompt.relation_extract_parse)
                     result_key = '{}: {}'.format(model.id, model.name)
                     st.session_state.relation_extract_results[result_key] = extract_result
 

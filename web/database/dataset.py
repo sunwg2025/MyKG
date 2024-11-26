@@ -87,6 +87,7 @@ class Dataset(Base):
             self.name = new.name
             self.tags = new.tags
             self.update_at = datetime.now()
+            session.add(self)
             session.commit()
         except Exception as e:
             session.rollback()

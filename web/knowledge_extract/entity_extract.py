@@ -75,7 +75,6 @@ else:
                 st.session_state.entity_extract_prompt_reload = True
                 st.rerun()
 
-
             @st.dialog('执行记录', width='large')
             def logs_view():
                 data = []
@@ -84,8 +83,12 @@ else:
                 for experiment_log in experiment_logs:
                     dataset = Dataset.get_dataset_by_id(experiment_log.dataset_id)
                     model = Model.get_model_by_id(experiment_log.model_id)
-                    data.append({'重载': False, '执行时间': experiment_log.create_at, '数据集': dataset.name, '模型': model.name,
-                                 '提示词': experiment_log.extract_prompt, '抽取结果': experiment_log.extract_result})
+                    data.append({'重载': False,
+                                 '执行时间': experiment_log.create_at,
+                                 '数据集': dataset.name,
+                                 '模型': model.name,
+                                 '提示词': experiment_log.extract_prompt,
+                                 '抽取结果': experiment_log.extract_result})
 
                 column_config = {
                     '重载': st.column_config.CheckboxColumn('重载', width='small'),
@@ -97,26 +100,23 @@ else:
                 }
                 edited_datas = st.data_editor(data, column_config=column_config, hide_index=False, num_rows='fixed',
                                               use_container_width=True)
-                col1, col2 = st.columns(2)
-                with col1:
-                    if st.button('重载提示词'):
-                        error = False
-                        extract_prompts = []
-                        for edited_data in edited_datas:
-                            if edited_data['重载']:
-                                extract_prompts.append(edited_data['提示词'])
-                        if len(extract_prompts) == 0:
-                            st.error('请选择需要重载的记录！', icon=':material/error:')
-                            error = True
-                        if len(extract_prompts) > 1 and not error:
-                            st.error('选择的重载记录超过1条，请重新选择！', icon=':material/error:')
-                            error = True
-                        if not error:
-                            st.session_state.entity_extract_prompt_history = extract_prompts[0]
-                with col2:
-                    if st.button('关闭'):
-                        st.rerun()
 
+                if st.button('重载提示词'):
+                    error = False
+                    extract_prompts = []
+                    for edited_data in edited_datas:
+                        if edited_data['重载']:
+                            extract_prompts.append(edited_data['提示词'])
+                    if len(extract_prompts) == 0:
+                        st.error('请选择需要重载的记录！', icon=':material/error:')
+                        error = True
+                    if len(extract_prompts) > 1 and not error:
+                        st.error('选择的重载记录超过1条，请重新选择！', icon=':material/error:')
+                        error = True
+                    if not error:
+                        st.session_state.entity_extract_prompt_history = extract_prompts[0]
+
+                    st.rerun()
 
             if st.button('载入历史'):
                 t = logs_view()

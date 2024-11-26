@@ -113,6 +113,7 @@ class Prompt(Base):
             self.relation_extract = new.relation_extract
             self.relation_extract_parse = new.relation_extract_parse
             self.update_at = datetime.now()
+            session.add(self)
             session.commit()
         except Exception as e:
             session.rollback()
@@ -138,6 +139,7 @@ class Prompt(Base):
             session = Session()
             self.attribute_extract = attribute_extract
             self.update_at = datetime.now()
+            session.add(self)
             session.commit()
         except Exception as e:
             session.rollback()
@@ -150,6 +152,7 @@ class Prompt(Base):
             session = Session()
             self.entity_extract = entity_extract
             self.update_at = datetime.now()
+            session.add(self)
             session.commit()
         except Exception as e:
             session.rollback()
@@ -162,6 +165,7 @@ class Prompt(Base):
             session = Session()
             self.relation_extract = relation_extract
             self.update_at = datetime.now()
+            session.add(self)
             session.commit()
         except Exception as e:
             session.rollback()

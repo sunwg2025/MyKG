@@ -74,6 +74,7 @@ def workflow_task_run(workflow_task_id):
         st.error('知识库更新失败，错误原因：{}！'.format(e), icon=':material/error:')
 
     try:
+        workflow_task = Workflow_Task.get_workflow_task_by_id(workflow_task_id)
         workflow_task.update_workflow_task(str(entity_extract_result), str(attribute_extract_result),
                                            str(relation_extract_result), task_start_at)
     except Exception as e:
@@ -163,16 +164,20 @@ with st.container(border=True):
         workflow_task_id = pending_task['args']
         workflow_task = Workflow_Task.get_workflow_task_by_id(workflow_task_id)
         workflow = Workflow.get_workflow_by_id(workflow_task.workflow_id)
+        elapse_seconds = (datetime.now() - workflow_task.update_at).total_seconds()
         all_pending_tasks.append({'工作流': workflow.name,
                                   '工作流任务': workflow_task.dataset_split_name,
+                                  '提交时间': workflow_task.update_at,
                                   '任务状态': task_status,
-                                  '创建时间': workflow_task.update_at})
+                                  '持续时长': elapse_seconds})
 
     column_config = {
         '工作流': st.column_config.TextColumn('工作流', width='small'),
         '工作流任务': st.column_config.TextColumn('工作流任务', width='small'),
+        '提交时间': st.column_config.DatetimeColumn('提交时间', width='small'),
         '任务状态': st.column_config.TextColumn('任务状态', width='small'),
-        '创建时间': st.column_config.DatetimeColumn('创建时间', width='small')
+        '持续时长': st.column_config.NumberColumn('持续时长', width='small')
+
     }
     attribute_datas = st.data_editor(all_pending_tasks, column_config=column_config, hide_index=True,
                                      disabled=True, use_container_width=True)

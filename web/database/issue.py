@@ -68,6 +68,7 @@ class Issue(Base):
             self.fixed = is_fixed
             self.comment = comment
             self.update_at = datetime.now()
+            session.add(self)
             session.commit()
         except Exception as e:
             session.rollback()

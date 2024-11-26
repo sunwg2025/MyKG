@@ -69,6 +69,7 @@ class Experiment(Base):
             session = Session()
             self.attribute_extract_model_id = attribute_extract_model_id
             self.update_at = datetime.now()
+            session.add(self)
             session.commit()
         except Exception as e:
             session.rollback()
@@ -81,6 +82,7 @@ class Experiment(Base):
             session = Session()
             self.entity_extract_model_id = entity_extract_model_id
             self.update_at = datetime.now()
+            session.add(self)
             session.commit()
         except Exception as e:
             session.rollback()
@@ -93,6 +95,7 @@ class Experiment(Base):
             session = Session()
             self.relation_extract_model_id = relation_extract_model_id
             self.update_at = datetime.now()
+            session.add(self)
             session.commit()
         except Exception as e:
             session.rollback()

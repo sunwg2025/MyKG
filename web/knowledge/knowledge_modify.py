@@ -92,7 +92,7 @@ with st.container(border=True):
             attribute_data.append({'实体': entity, '属性': attribute_type, '属性值': attribute_value})
     column_config = {
         '实体': st.column_config.TextColumn('实体', width='small'),
-        '属性': st.column_config.TextColumn('属性', width='small'),
+        '属性': st.column_config.TextColumn('属性', width='medium'),
         '属性值': st.column_config.TextColumn('属性值', width="large", help='点击以查看完整数据')
     }
     st.text('实体属性')
