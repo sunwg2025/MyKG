@@ -158,7 +158,7 @@ with st.container(border=True):
                                                       relation_extract=prompt.relation_extract,
                                                       relation_extract_parse=prompt.relation_extract_parse)
                         my_workflow_tasks.append(workflow_task)
-                Workflow_Task.create_workflow_tasks_batch()
+                Workflow_Task.create_workflow_tasks_batch(my_workflow_tasks)
                 st.success('工作流创建成功！', icon=':material/done:')
             except Exception as e:
                 st.error('工作流创建失败，错误原因：{}！'.format(e), icon=':material/error:')

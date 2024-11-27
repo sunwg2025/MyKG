@@ -28,33 +28,38 @@ with st.form("submit"):
     delete = st.toggle("删除")
     submit_button = st.form_submit_button('提交')
     if submit_button:
-        model_id = model_select.split(':')[0]
-        if delete:
-            try:
-                Model.delete_model_by_id(model_id)
-                st.success('模型配置删除成功！', icon=':material/done:')
-            except Exception as e:
-                st.error('模型配置删除失败，错误原因：{}！'.format(e), icon=':material/error:')
-        else:
-            error = False
-            same_model = Model.get_model_by_owner_with_name(model_name)
-            if same_model:
-                if str(same_model.id) != str(model_id):
-                    st.error('用户下已有同名模型，请重新输入！', icon=':material/error:')
-                    error = True
-            if not error:
+        error = False
+        if model_select is None:
+            st.error('模型配置不能为空，请重新输入！', icon=':material/error:')
+            error = True
+        if not error:
+            model_id = model_select.split(':')[0]
+            if delete:
                 try:
-                    check_model_config(model_content)
+                    Model.delete_model_by_id(model_id)
+                    st.success('模型配置删除成功！', icon=':material/done:')
                 except Exception as e:
-                    st.error('模型配置测试失败，错误原因：{}！'.format(e), icon=':material/error:')
-                    error = True
-            if not error:
-                try:
-                    if is_default:
-                        Model.clear_default_model_by_owner()
-                    new = Model(name=model_name, content=model_content, is_default=is_default)
-                    model.update_model_columns(new)
-                    st.success('模型更新成功！', icon=':material/done:')
-                except Exception as e:
-                    st.error('模型更新失败，错误原因：{}！'.format(e), icon=':material/error:')
+                    st.error('模型配置删除失败，错误原因：{}！'.format(e), icon=':material/error:')
+            else:
+                error = False
+                same_model = Model.get_model_by_owner_with_name(model_name)
+                if same_model:
+                    if str(same_model.id) != str(model_id):
+                        st.error('用户下已有同名模型，请重新输入！', icon=':material/error:')
+                        error = True
+                if not error:
+                    try:
+                        check_model_config(model_content)
+                    except Exception as e:
+                        st.error('模型配置测试失败，错误原因：{}！'.format(e), icon=':material/error:')
+                        error = True
+                if not error:
+                    try:
+                        if is_default:
+                            Model.clear_default_model_by_owner()
+                        new = Model(name=model_name, content=model_content, is_default=is_default)
+                        model.update_model_columns(new)
+                        st.success('模型更新成功！', icon=':material/done:')
+                    except Exception as e:
+                        st.error('模型更新失败，错误原因：{}！'.format(e), icon=':material/error:')
 

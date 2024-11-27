@@ -6,7 +6,6 @@ load_dotenv()
 import sys
 sys.path.append(os.environ['BASE_DIR'])
 from web.database.user import User
-from web.database import session
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -20,6 +19,5 @@ if __name__ == '__main__':
                 confirmed=True,
                 enabled=True,
                 is_admin=True)
-    session.add(user)
-    session.commit()
+    User.create_user(user)
     print('管理员创建成功！')
