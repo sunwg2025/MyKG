@@ -104,7 +104,8 @@ def get_all_attribute_knowledge(graph):
         pattern = r"(URIRef\('http://example.org/kg/(.*?)'\))|(Literal\('(.*?)'\))"
         matches = re.findall(pattern, str(r))
         tmp = [match[1] if match[1] else match[3] for match in matches]
-        results.append({'实体': tmp[0], '属性': tmp[1], '属性值': tmp[2]})
+        if len(tmp) == 3:
+            results.append({'实体': tmp[0], '属性': tmp[1], '属性值': tmp[2]})
     return results
 
 
@@ -126,7 +127,8 @@ def get_entity_attribute_knowledge(graph, entity):
         pattern = r"(URIRef\('http://example.org/kg/(.*?)'\))|(Literal\('(.*?)'\))"
         matches = re.findall(pattern, str(r))
         tmp = [match[1] if match[1] else match[3] for match in matches]
-        results.append({'实体': tmp[0], '属性': tmp[1], '属性值': tmp[2]})
+        if len(tmp) == 3:
+            results.append({'实体': tmp[0], '属性': tmp[1], '属性值': tmp[2]})
     return results
 
 
