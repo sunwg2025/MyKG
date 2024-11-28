@@ -58,8 +58,8 @@ question_and_answer_page = st.Page('web/knowledge_application/question_and_answe
 # 工作流
 workflow_create_page = st.Page('web/workflow/workflow_create.py', title='工作流创建', icon=':material/moving:')
 workflow_execute_page = st.Page('web/workflow/workflow_execute.py', title='工作流执行-前台', icon=':material/play_circle:')
-workflow_execute_backend_page = st.Page('web/workflow/workflow_execute_backend.py', title='工作流执行-后台', icon=':material/play_circle:')
-workflow_result_query_page = st.Page('web/workflow/workflow_result_query.py', title='工作流结果查询', icon=':material/play_circle:')
+workflow_execute_backend_page = st.Page('web/workflow/workflow_execute_backend.py', title='工作流执行-后台', icon=':material/order_play:')
+workflow_result_query_page = st.Page('web/workflow/workflow_result_query.py', title='工作流结果查询', icon=':material/search:')
 
 
 # 系统管理
