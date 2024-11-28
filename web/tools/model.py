@@ -4,8 +4,6 @@ from agentscope.agents import KnowledgeAgent, DialogAgent
 from agentscope.parsers import MarkdownJsonDictParser
 from web.database.system_prompt import System_Prompt
 import re
-from web.tools.other import is_valid_list_format
-import json
 
 
 def check_model_config(content):
@@ -26,7 +24,7 @@ def check_model_config(content):
 
 
 def call_knowledge_agent_base(model_configs, sys_prompt, extract_parse, dataset_content):
-    agentscope.init(model_configs=model_configs)
+    agentscope.init(model_configs=model_configs, disable_saving=True, save_code=False)
     config_name = model_configs['config_name']
     knowledgeAgent = KnowledgeAgent(name="assistant", model_config_name=config_name, sys_prompt=sys_prompt)
     ontology_extract_parser = MarkdownJsonDictParser(content_hint=eval(extract_parse))

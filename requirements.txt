@@ -13,3 +13,4 @@ funasr
 torch
 torchaudio
 modelscope
+python-multipart
