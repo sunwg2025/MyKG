@@ -56,7 +56,6 @@ def extract_attribute_knowledge(dataset_content, entity_content, model_content, 
     model_configs = eval(model_content)
     sys_prompt = character + ' ' + extract_prompt.replace('{{ entity }}', entity_content)
     extract_result = []
-    agent_result = ''
     entity_list = eval(entity_content)
     for i in range(5):
         try:
@@ -75,7 +74,6 @@ def extract_relation_knowledge(dataset_content, entity_content, model_content, c
     model_configs = eval(model_content)
     sys_prompt = character + ' ' + extract_prompt.replace('{{ entity }}', entity_content)
     extract_result = []
-    agent_result = ''
     entity_list = eval(entity_content)
     for i in range(5):
         try:

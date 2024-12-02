@@ -67,9 +67,10 @@ with st.form("submit"):
                     st.error('提示词删除失败，错误原因：{}！'.format(e), icon=':material/error:')
             else:
                 error = False
-                if str(Prompt.get_prompt_by_owner_with_name(prompt_name_new).id) != str(prompt_id):
-                    st.error('用户下已有同名提示词，请重新输入！', icon=':material/error:')
-                    error = True
+                if not error:
+                    if Prompt.get_prompt_by_owner_with_name(prompt_name_new):
+                        st.error('用户下已有同名提示词，请重新输入！', icon=':material/error:')
+                        error = True
                 if not error:
                     try:
                         prompt = Prompt.get_prompt_by_id(prompt_id)
