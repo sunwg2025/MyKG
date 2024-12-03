@@ -42,16 +42,29 @@ with st.form("submit"):
                     st.error('模型配置删除失败，错误原因：{}！'.format(e), icon=':material/error:')
             else:
                 error = False
-                same_model = Model.get_model_by_owner_with_name(model_name)
-                if same_model:
-                    if str(same_model.id) != str(model_id):
-                        st.error('用户下已有同名模型，请重新输入！', icon=':material/error:')
-                        error = True
+                if model_name != model_name_value:  # 只有在用户修改了模型名称时才检查同名
+                   same_model = Model.get_model_by_owner_with_name(model_name)
+                   if same_model and str(same_model.id) != str(model_id):
+                      st.error('用户下已有同名模型，请重新输入！', icon=':material/error:')
+                      error = True
+                #12.3
+                # same_model = Model.get_model_by_owner_with_name(model_name)
+                # if same_model:
+                #     if str(same_model.id) != str(model_id):
+                #         st.error('用户下已有同名模型，请重新输入！', icon=':material/error:')
+                #         error = True
                 if not error:
                     try:
                         check_model_config(model_content)
                     except Exception as e:
-                        st.error('模型配置测试失败，错误原因：{}！'.format(e), icon=':material/error:')
+                        # 判断是否是欠费错误12.3
+                        if "Arrearage" in str(e):
+                            st.error('模型配置测试失败，原因：账户欠费或服务暂停，请检查账户状态。', icon=':material/error:')
+                        # 判断是否是网络超时错误12.3
+                        elif "Request timed out" in str(e):
+                            st.error('模型配置测试失败，原因：网络超时，请确保网络稳定后重试。', icon=':material/error:')
+                        else:
+                            st.error('模型配置测试失败，错误原因：{}！'.format(e), icon=':material/error:')
                         error = True
                 if not error:
                     try:
