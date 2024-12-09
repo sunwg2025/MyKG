@@ -33,7 +33,14 @@ with st.form('submit'):
             try:
                 check_model_config(model_content)
             except Exception as e:
-                st.error('模型配置测试失败，错误原因：{}！'.format(e), icon=':material/error:')
+                # 判断是否是欠费错误12.3
+                if "Arrearage" in str(e):
+                    st.error('模型配置测试失败，原因：账户欠费或服务暂停，请检查账户状态。', icon=':material/error:')
+                # 判断是否是网络超时错误12.3
+                elif "Request timed out" in str(e):
+                    st.error('模型配置测试失败，原因：网络超时，请确保网络稳定后重试。', icon=':material/error:')
+                else:
+                    st.error(f'模型配置测试失败，错误原因：{e}', icon=':material/error:')
                 error = True
         if not error:
             try:
