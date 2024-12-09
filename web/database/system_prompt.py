@@ -42,7 +42,7 @@ class System_Prompt(Base):
     def update_system_prompt_by_name(name, content, result):
         try:
             session = Session()
-            system_prompt = System_Prompt.get_system_prompt_by_name(name)
+            system_prompt = session.query(System_Prompt).filter(System_Prompt.name == name).first()
             system_prompt.content = content
             system_prompt.result = result
             system_prompt.update_at = datetime.now()
